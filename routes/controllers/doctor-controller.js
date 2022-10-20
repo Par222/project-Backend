@@ -26,6 +26,22 @@ const getDoctorById=async(req,res,next)=>{
 
 
 }
+const getAllDoctor=async(req,res,next)=>{
+    let doctor;
+    try{    
+    doctor=await User.find({})
+    }
+    catch{
+        return next(new HttpError('Could not connect to databse'),422)
+    }
+    if(doctor.length===0 || !doctor)
+    {
+        return next(new HttpError('No user found'),422)
+    }
+
+    res.status(200)
+    res.json({doctors:doctor.map((d)=>d.toObject({getters:true}))})
+}
 
 
 const createDoctor=async(req,res,next)=>{
@@ -149,3 +165,4 @@ exports.getDoctorById=getDoctorById
 exports.createDoctor=createDoctor
 exports.updateDoctorById=updateDoctorById
 exports.deleteDoctorById=deleteDoctorById
+exports.getAllDoctor=getAllDoctor

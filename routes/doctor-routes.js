@@ -11,6 +11,7 @@ check('expertise').not().isEmpty(),check('age').not().isEmpty(),check('image').n
 router.patch('/:pid',[check('expertise').not().isEmpty(),
 check('des').isLength({min:5}),check('image').not().isEmpty()],doctorController.updateDoctorById)
 router.delete('/:pid',doctorController.deleteDoctorById)
+router.get('/',doctorController.getAllDoctor)
 
 
 module.exports=router
