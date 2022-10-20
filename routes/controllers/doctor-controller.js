@@ -1,0 +1,151 @@
+const HttpError=require('../errors/http-error')
+const {v4: uuidv4}=require('uuid')
+const {validationResult}=require('express-validator')
+const Doctor=require('../../modals/doctor')
+const User=require('../../modals/user')
+const { default: mongoose } = require('mongoose')
+const getDoctorById=async(req,res,next)=>{
+
+    const docId=req.params.pid
+    let doctor;
+    try{
+         doctor=await Doctor.findById(docId)
+    }
+    catch{
+        return next (new HttpError('Could not connect to database',422))
+    }
+
+    if(!doctor)
+    {
+        return next ( new HttpError('Could not find doctor with given id',404))
+    }
+
+    res.status(200)
+    res.json({doctor:doctor.toObject({getters:true})})
+
+
+
+}
+
+
+const createDoctor=async(req,res,next)=>{
+    const {name,des,age,expertise,image,creator,}=req.body
+    const error=validationResult(req)
+    if(!error.isEmpty())
+    {
+        return next (new HttpError("Invalid details provided",501))
+    }
+
+    const doctor= new Doctor(
+        {
+            name,
+            des,
+            age,
+            expertise,
+            image,
+            creator
+           
+        }
+
+    )
+let user;
+   try{
+    user=await User.findById(creator)
+   }
+   catch{
+    return next (new HttpError("Could not connect to database",501))
+   }
+   if(!user){
+    return next (new HttpError("Invalid user",404))
+   }
+   console.log(doctor)
+    try{
+        const sess=await mongoose.startSession()
+        sess.startTransaction();
+      
+        await doctor.save({session:sess})
+         user.doctors.push(doctor)
+        await user.save({session:sess})
+        sess.commitTransaction();
+        
+
+    }
+    catch{
+     
+        return next(new HttpError('Couldnt save to a databse'),422)
+
+    }
+    res.status(201)
+    res.json({doctor:doctor.toObject({getters:true})})
+}
+const updateDoctorById=async(req,res,next)=>{
+  
+    const {expertise,des,image}=req.body
+    const docId=req.params.pid
+    const error=validationResult(req)
+    if(!error.isEmpty())
+    {
+        throw new HttpError("Invalid details provided",501)
+    }
+    
+    let doctor;
+    try{
+         doctor=await Doctor.findById(docId)
+    }
+    catch{
+        return next (new HttpError('Could not connect to database',422))
+    }
+    if(!doctor)
+    {
+       throw new HttpError('Could not find doctor for given id',404)
+    }
+
+   
+
+    try{
+        doctor.expertise=expertise
+        doctor.des=des
+        doctor.image=image
+        await doctor.save();
+    }
+    catch{
+        return next(new HttpError('Could not save to database'),422 )
+    }
+   
+    res.status(200)
+    res.json({doctor:doctor.toObject({getters:true})})
+
+}
+const deleteDoctorById=async(req,res,next)=>{
+    const docId=req.params.pid
+    let doctor;
+    try{
+    doctor=await Doctor.findById(docId).populate('creator')
+    }
+    catch{
+        return next(new HttpError('Could not connect  to database'),422 )
+    }
+    if(!doctor)
+    {
+        return next( new HttpError('Could not find a doctor for given id'),404)
+    }
+    
+    try{
+         const sess= await mongoose.startSession();
+         sess.startTransaction();
+         await doctor.remove({session:sess})
+         doctor.creator.doctors.pull(doctor)
+         await doctor.creator.save({session:sess})
+         sess.commitTransaction()
+    }
+    catch{
+        return next(new HttpError('Deletion failed'),500)
+    }
+    res.status(200)
+    res.json({doctor:doctor.toObject({getters:true})})
+}
+
+exports.getDoctorById=getDoctorById
+exports.createDoctor=createDoctor
+exports.updateDoctorById=updateDoctorById
+exports.deleteDoctorById=deleteDoctorById
