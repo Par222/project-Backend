@@ -19,7 +19,7 @@ const doctorSchema= new Schema(
             type:String,
             required:true
         },
-        creator:{
+        patients:{
             type:mongoose.Types.ObjectId,
             required:true,
             ref:"User"

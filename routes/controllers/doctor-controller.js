@@ -45,7 +45,7 @@ const getAllDoctor=async(req,res,next)=>{
 
 
 const createDoctor=async(req,res,next)=>{
-    const {name,des,age,expertise,image,creator,}=req.body
+    const {name,des,age,expertise,image,fees}=req.body
     const error=validationResult(req)
     if(!error.isEmpty())
     {
@@ -59,7 +59,8 @@ const createDoctor=async(req,res,next)=>{
             age,
             expertise,
             image,
-            creator
+            fees,
+            patients:[]
            
         }
 
@@ -67,6 +68,7 @@ const createDoctor=async(req,res,next)=>{
 let user;
    try{
     user=await User.findById(creator)
+    await doctor.save();
    }
    catch{
     return next (new HttpError("Could not connect to database",501))
@@ -75,28 +77,13 @@ let user;
     return next (new HttpError("Invalid user",404))
    }
    console.log(doctor)
-    try{
-        const sess=await mongoose.startSession()
-        sess.startTransaction();
-      
-        await doctor.save({session:sess})
-         user.doctors.push(doctor)
-        await user.save({session:sess})
-        sess.commitTransaction();
-        
-
-    }
-    catch{
-     
-        return next(new HttpError('Couldnt save to a databse'),422)
-
-    }
+   
     res.status(201)
     res.json({doctor:doctor.toObject({getters:true})})
 }
 const updateDoctorById=async(req,res,next)=>{
   
-    const {expertise,des,image}=req.body
+    const {expertise,des,image,fees}=req.body
     const docId=req.params.pid
     const error=validationResult(req)
     if(!error.isEmpty())
@@ -122,6 +109,7 @@ const updateDoctorById=async(req,res,next)=>{
         doctor.expertise=expertise
         doctor.des=des
         doctor.image=image
+        doctor.fees=fees
         await doctor.save();
     }
     catch{
@@ -136,7 +124,8 @@ const deleteDoctorById=async(req,res,next)=>{
     const docId=req.params.pid
     let doctor;
     try{
-    doctor=await Doctor.findById(docId).populate('creator')
+    doctor=await Doctor.findById(docId)
+    await doctor.save();
     }
     catch{
         return next(new HttpError('Could not connect  to database'),422 )
@@ -146,17 +135,6 @@ const deleteDoctorById=async(req,res,next)=>{
         return next( new HttpError('Could not find a doctor for given id'),404)
     }
     
-    try{
-         const sess= await mongoose.startSession();
-         sess.startTransaction();
-         await doctor.remove({session:sess})
-         doctor.creator.doctors.pull(doctor)
-         await doctor.creator.save({session:sess})
-         sess.commitTransaction()
-    }
-    catch{
-        return next(new HttpError('Deletion failed'),500)
-    }
     res.status(200)
     res.json({doctor:doctor.toObject({getters:true})})
 }
