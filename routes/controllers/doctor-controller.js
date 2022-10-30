@@ -29,7 +29,7 @@ const getDoctorById=async(req,res,next)=>{
 const getAllDoctor=async(req,res,next)=>{
     let doctor;
     try{    
-    doctor=await User.find({})
+    doctor=await Doctor.find({})
     }
     catch{
         return next(new HttpError('Could not connect to databse'),422)
