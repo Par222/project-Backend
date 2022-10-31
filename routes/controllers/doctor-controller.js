@@ -29,7 +29,7 @@ const getDoctorById=async(req,res,next)=>{
 const getAllDoctor=async(req,res,next)=>{
     let doctor;
     try{    
-    doctor=await User.find({})
+    doctor=await Doctor.find({})
     }
     catch{
         return next(new HttpError('Could not connect to databse'),422)
@@ -65,13 +65,13 @@ const createDoctor=async(req,res,next)=>{
         }
 
     )
-let user;
+    let user;
    try{
-    user=await User.findById(creator)
-    await doctor.save();
+    user = await doctor.save();
    }
-   catch{
-    return next (new HttpError("Could not connect to database",501))
+   catch(err){
+    res.send(err.message);
+    // return next (new HttpError("Could not connect to database",501))
    }
    if(!user){
     return next (new HttpError("Invalid user",404))
@@ -83,7 +83,7 @@ let user;
 }
 const updateDoctorById=async(req,res,next)=>{
   
-    const {expertise,des,image,fees}=req.body
+    const {name,des,age,expertise,image,fees}=req.body
     const docId=req.params.pid
     const error=validationResult(req)
     if(!error.isEmpty())
@@ -93,7 +93,7 @@ const updateDoctorById=async(req,res,next)=>{
     
     let doctor;
     try{
-         doctor=await Doctor.findById(docId)
+        doctor=await Doctor.findByIdAndUpdate(docId, req.body)
     }
     catch{
         return next (new HttpError('Could not connect to database',422))
@@ -101,19 +101,6 @@ const updateDoctorById=async(req,res,next)=>{
     if(!doctor)
     {
        throw new HttpError('Could not find doctor for given id',404)
-    }
-
-   
-
-    try{
-        doctor.expertise=expertise
-        doctor.des=des
-        doctor.image=image
-        doctor.fees=fees
-        await doctor.save();
-    }
-    catch{
-        return next(new HttpError('Could not save to database'),422 )
     }
    
     res.status(200)
@@ -124,8 +111,7 @@ const deleteDoctorById=async(req,res,next)=>{
     const docId=req.params.pid
     let doctor;
     try{
-    doctor=await Doctor.findById(docId)
-    await doctor.save();
+    doctor=await Doctor.findByIdAndDelete(docId)
     }
     catch{
         return next(new HttpError('Could not connect  to database'),422 )

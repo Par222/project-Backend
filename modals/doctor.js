@@ -5,28 +5,32 @@ const doctorSchema= new Schema(
     {
         name:{
             type:String,
-            required:true
+            required:'Please enter your name'
         },
         des:{
             type:String,
-            required:true
+            required:'Please enter your description'
         },
         expertise:{
             type:String,
-            required:true
+            required:'Please enter your expertise'
         },
         age:{
-            type:String,
-            required:true
+            type:Number,
+            required:'Please enter your age'
+        },
+        fees:{
+            type:Number,
+            required:'Please enter your fees'
         },
         patients:{
-            type:mongoose.Types.ObjectId,
-            required:true,
+            type:Array,
+            required:false,
             ref:"User"
         },
         image:{
             type:String,
-            required:true
+            required:'Please enter your image'
         }
     }
 )
