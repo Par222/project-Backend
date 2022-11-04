@@ -1,37 +1,58 @@
-const mongoose=require('mongoose')
-const {Schema}=mongoose
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const doctorSchema= new Schema(
+const doctorSchema = new Schema({
+  name: {
+    type: String,
+    required: "Please enter your name",
+  },
+  des: {
+    type: String,
+    required: "Please enter your description",
+  },
+  expertise: {
+    type: String,
+    required: "Please enter your expertise",
+  },
+  age: {
+    type: Number,
+    required: "Please enter your age",
+  },
+  fees: {
+    type: Number,
+    required: "Please enter your fees",
+  },
+  patients: [
     {
-        name:{
-            type:String,
-            required:'Please enter your name'
-        },
-        des:{
-            type:String,
-            required:'Please enter your description'
-        },
-        expertise:{
-            type:String,
-            required:'Please enter your expertise'
-        },
-        age:{
-            type:Number,
-            required:'Please enter your age'
-        },
-        fees:{
-            type:Number,
-            required:'Please enter your fees'
-        },
-        patients:{
-            type:Array,
-            required:false,
-            ref:"User"
-        },
-        image:{
-            type:String,
-            required:'Please enter your image'
-        }
-    }
-)
-module.exports=mongoose.model('Doctor',doctorSchema)
+      type: mongoose.Types.ObjectId,
+      required: false,
+      ref: "User",
+    },
+  ],
+  appointments: [
+    {
+      type: mongoose.Types.ObjectId,
+      required: false,
+      ref: "Appointment",
+    },
+  ],
+
+  image: {
+    type: String,
+    required: "Please enter your image",
+  },
+  rating: {
+    type: Number,
+    required: false,
+  },
+  certificates: {
+    type: Array,
+    required: false,
+  },
+  education: {
+    type: Array,
+    required: false,
+  },
+  contact: { type: { email: String, mobile: String }, required: false },
+});
+module.exports = mongoose.model("Doctor", doctorSchema);

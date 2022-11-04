@@ -16,7 +16,6 @@ const userSchema= new Schema(
         password:{
             type:String,
             required:true
-
         },
         image:{
             type:String,
@@ -26,7 +25,20 @@ const userSchema= new Schema(
             type:mongoose.Types.ObjectId,
             required:true,
             ref:'Doctor'
-        }]
+        }],
+        appointments:[{
+            type:mongoose.Types.ObjectId,
+            required:true,
+            ref:'Appointment'
+        }],
+        reports:[
+            {type:{medicines:Array ,createdBy:mongoose.Types.ObjectId},
+            required:false ,ref:'Doctor'}
+        ]
+
+
+
+
        
         
     }
