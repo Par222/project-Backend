@@ -18,7 +18,7 @@ const getAllAmbulance = async (req, res, next) => {
   }
 
   res.status(200);
-  res.json({ ambulances: ambulance.toObject({ getters: true }) });
+  res.json({ ambulances: ambulance.map((amb) => amb.toObject({ getters: true })) });
 };
 const createAmbulance = async (req, res, next) => {
     const { plate,driver,status } = req.body;
@@ -46,7 +46,7 @@ const createAmbulance = async (req, res, next) => {
     }
   
     res.status(201);
-    res.json({ ambulances: ambulance.toObject({ getters: true }) });
+    res.json({ ambulance: ambulance.toObject({ getters: true }) });
   };
   const updateAmbulanceById = async (req, res, next) => {
     const ambId = req.params.pid;
@@ -84,27 +84,12 @@ const createAmbulance = async (req, res, next) => {
     res.json({ ambulance: ambulance.toObject({ getters: true }) });
   };
 
-  const bookAmbulance=async(req,res,next)=>{
-   
-    let ambulance
-    try{
-     ambulance= Ambulance.findByIdAndUpdate({status:"Free"},req.body,{new:true})
-    }catch {
-        return next(new HttpError("Could not connect  to database"), 422);
-      }
-      if (!ambulance) {
-        return next(new HttpError("Could not find a ambulance for given id"), 404);
-      }
-    
-      res.status(200);
-      res.json({ ambulance: ambulance.toObject({ getters: true }) });
-    };
-
+  
 
 
 exports.getAllAmbulance = getAllAmbulance;
 exports.deleteAmbulanceById=deleteAmbulanceById
 exports.updateAmbulanceById=updateAmbulanceById
 exports.createAmbulance=createAmbulance
-exports.bookAmbulance=async(bookAmbulance)
+
 

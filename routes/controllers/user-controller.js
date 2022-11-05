@@ -80,6 +80,10 @@ const loginUser=async(req,res,next)=>{
     res.json({message:"Logged-IN"})
    
 }
+const requestAmbulance=async(req,res,next)=>{
+    
+   
+}
 exports.showUser=showUser
 exports.createUser=createUser
 exports.loginUser=loginUser

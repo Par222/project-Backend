@@ -9,7 +9,7 @@ router.post('/',[check('plate').not().isEmpty(),
 check('status').not().isEmpty()],ambulanceController.createAmbulance)
 router.patch('/:pid',[],ambulanceController.updateAmbulanceById)
 router.delete('/:pid',ambulanceController.deleteAmbulanceById)
-router.patch('/book',[check('sttaus').not().isEmpty()],ambulanceController.bookAmbulance)
+
 
 
 

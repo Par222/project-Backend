@@ -17,8 +17,12 @@ const ambulanceSchema = new Schema({
       ref: "User",
     },
   ],
-  location: { type: { lat: String, lng: String }, required: false },
+  location: { type: { lat: String, lng: String }, required: true },
+  emergency:{
+    type:String,
+    required:false
+  },
  
-  driver: { type: { name: String, mobile: String }, required: true },
+  driver: { type: { name: String, mobile: String,image: String}, required: true },
 });
 module.exports = mongoose.model("Ambulance", ambulanceSchema);
