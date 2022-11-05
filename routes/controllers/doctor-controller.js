@@ -21,7 +21,7 @@ const getDoctorById = async (req, res, next) => {
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
 const searchDoctor = async (req, res, next) => {
-  let name=req.query.name
+  let name=req.params.name
 
   let doctor;
   try {
