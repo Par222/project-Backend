@@ -32,14 +32,16 @@ const createAmbulance = async (req, res, next) => {
       status,
       plate,
       driver,
-      patients: [],
+      patient: [],
+      location:{},
+      emergency:{}
+
     });
     let amb;
     try {
       amb = await ambulance.save();
     } catch (err) {
-      res.send(err.message);
-       return next (new HttpError("Could not connect to database",501))
+      return next (new HttpError("Could not connect to database",501))
     }
     if (!amb) {
       return next(new HttpError("Invalid user", 404));

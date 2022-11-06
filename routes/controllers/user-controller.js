@@ -23,7 +23,7 @@ const showUser=async(req,res,next)=>{
    
 }
 const createUser=async(req,res,next)=>{
-    const {name,email,password,image}=req.body
+    const {name,email,password,token}=req.body
     const error=validationResult(req)
     if(!error.isEmpty())
     {
@@ -45,16 +45,25 @@ const createUser=async(req,res,next)=>{
             name,
             email,
             password,
-            image,
-            doctors:[]
+            token,
+            image:"",
+            contact:"",
+            doctors:[],
+            ambulance:[],
+            reports:[]
+
         })
         console.log(Myuser)
-   try{
-    const result=await Myuser.save()
-   }
-   catch{
-    return next(new HttpError('Sign-up failed'),501)
-   }
+   
+     Myuser.save(function(err,result){
+        if (err){
+            console.log(err);
+        }
+        else{
+            console.log(result)
+        }
+    });
+
     res.status(201);
     res.json({user:Myuser.toObject({getters:true})})
 }
@@ -77,13 +86,49 @@ const loginUser=async(req,res,next)=>{
         return next(new HttpError('Invalid passowrd or account does not exsist'),501)
 
     }
-    res.json({message:"Logged-IN"})
+    res.status(201);
+    res.json({user:user.toObject({getters:true})})
    
 }
-const requestAmbulance=async(req,res,next)=>{
-    
-   
-}
+const getUserById = async (req, res, next) => {
+    const uid= req.params.uid;
+    let user;
+    try {
+      user = await User.findById(uid)
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+  
+    if (!user) {
+      return next(new HttpError("Could not find user with given id", 404));
+    }
+  
+    res.status(200);
+    res.json({ user: user.toObject({ getters: true }) });
+  };
+const updateUserById = async (req, res, next) => {
+    const uid = req.params.uid;
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      throw new HttpError("Invalid details provided", 501);
+    }
+  
+    let user;
+    try {
+      user = await User.findByIdAndUpdate(uid, req.body,{new:true});
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+    if (!user) {
+      throw new HttpError("Could not find doctor for given id", 404);
+    }
+  
+    res.status(200);
+    res.json({ user: user.toObject({ getters: true }) });
+  };
+ 
 exports.showUser=showUser
 exports.createUser=createUser
 exports.loginUser=loginUser
+exports.getUserById=getUserById
+exports.updateUserById=updateUserById
