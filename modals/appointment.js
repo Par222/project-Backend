@@ -28,7 +28,7 @@ const AppointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    link: {
+    meet_link: {
       type: String,
     },
     illness: {
