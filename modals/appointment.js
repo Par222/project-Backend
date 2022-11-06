@@ -1,45 +1,130 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
-const AppointmentSchema = new Schema({
-  slot: {
-    type: {
-      time: String,
-      appointment_date: Date,
-    },
-    required: true,
-  },
-  mode: {
-    type: String,
-    required: true,
-  },
-  meet_code: {
-    type: String,
-    required: false,
-  },
-  doctor: {
-    type: mongoose.Types.ObjectId,
-    required: false,
-    ref: "Doctor",
-  },
-  status:{
-    type:String,
-    required:true
-  },
-  des:{
-    type:{
-        image:String,
-        text:String,
-
-    },
-    required:true
-  },
-  patient: 
-    {
+const AppointmentSchema = new mongoose.Schema(
+  {
+    patient: {
       type: mongoose.Types.ObjectId,
-      required: false,
       ref: "User",
+      required: true,
     },
-  
-});
-module.exports = mongoose.model("Appoitnment", AppointmentSchema);
+    doctor: {
+      type: mongoose.Types.ObjectId,
+      ref: "Doctor",
+      required: true,
+    },
+    slot: {
+      type: {
+        start_time: {
+          type: String,
+          required: true,
+        },
+        date: {
+          type: Date,
+          required: true,
+        },
+      },
+    },
+    mode: {
+      type: String,
+      required: true,
+    },
+    link: {
+      type: String,
+    },
+    illness: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: {
+        text: {
+          type: String,
+        },
+        media: {
+          type: String,
+        },
+      },
+    },
+    payment_status: {
+      type: String,
+      default: "Pending",
+    },
+    additional_notes: {
+      type: String,
+    },
+    prescription: {
+      text: {
+        type: String,
+      },
+      media: {
+        type: String,
+      },
+    },
+    approved_by: {
+      type: {
+        doctor: {
+          type: String,
+          default: "Pending",
+        },
+      },
+    },
+  }
+  // { _id: false }
+);
+
+// const AppointmentRequestSchema = new mongoose.Schema({
+//   patient: {
+//     type: mongoose.Types.ObjectId,
+//     ref: "User",
+//     required: true,
+//   },
+//   doctor: {
+//     type: mongoose.Types.ObjectId,
+//     ref: "Doctor",
+//     required: true,
+//   },
+//   mode: {
+//     type: String,
+//     required: true,
+//   },
+//   slot: {
+//     type: {
+//       time: {
+//         type: String,
+//         required: true,
+//       },
+//       date: {
+//         type: Date,
+//         required: true,
+//       },
+//     },
+//   },
+//   illness: {
+//     type: String,
+//     required: true,
+//   },
+//   description: {
+//     type: {
+//       text: {
+//         type: String,
+//       },
+//       media: {
+//         type: String,
+//       },
+//     },
+//   },
+//   approved_by: {
+//     type: {
+//       doctor: {
+//         type: String,
+//         default: "Pending"
+//       }
+//     }
+//   }
+// });
+
+module.exports.Appointment = mongoose.Model("Appointment", AppointmentSchema);
+// module.exports.AppointmentRequest = mongoose.Model(
+//   "AppointmentRequest",
+//   AppointmentRequestSchema
+// );
