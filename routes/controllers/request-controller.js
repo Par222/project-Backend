@@ -55,6 +55,24 @@ const createReq = async (req, res, next) => {
     res.status(200);
     res.json({ requests: request.map((r) => r.toObject({ getters: true })) });
   };
+  const getReqByPatientId = async (req, res, next) => {
+    const pid = req.params.pid;
+    let request;
+    try {
+      request = await Request.find({patient:pid});
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+  
+    if (!request) {
+      return next(new HttpError("Could not find doctor with given id", 404));
+    }
+  
+    res.status(200);
+    res.json({ requests: request.map((r) => r.toObject({ getters: true })) });
+   
+  };
+
  
  
 
@@ -62,3 +80,4 @@ const createReq = async (req, res, next) => {
 exports.updateReqById=updateReqById
 exports.createReq=createReq
 exports.getPendingRequest=getPendingRequest
+exports.getReqByPatientId=getReqByPatientId
