@@ -32,7 +32,7 @@ const createAmbulance = async (req, res, next) => {
       status,
       plate,
       driver,
-      patient: [],
+      patient: "",
       location:{},
       emergency:{}
 
@@ -85,6 +85,22 @@ const createAmbulance = async (req, res, next) => {
     res.status(200);
     res.json({ ambulance: ambulance.toObject({ getters: true }) });
   };
+  const getAmbulanceByPatientId = async (req, res, next) => {
+    const pid = req.params.pid;
+    let amb;
+    try {
+      amb = await Ambulance.findOne({patient:pid,status:"Alloted"});
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+  
+    if (!amb) {
+      return next(new HttpError("Could not find patient with given id", 404));
+    }
+  
+    res.status(200);
+    res.json({ ambulance: amb.toObject({ getters: true }) });
+  };
 
   
 
@@ -93,5 +109,6 @@ exports.getAllAmbulance = getAllAmbulance;
 exports.deleteAmbulanceById=deleteAmbulanceById
 exports.updateAmbulanceById=updateAmbulanceById
 exports.createAmbulance=createAmbulance
+exports.getAmbulanceByPatientId=getAmbulanceByPatientId
 
 

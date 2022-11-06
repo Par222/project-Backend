@@ -11,11 +11,11 @@ const ambulanceSchema = new Schema({
     required: true,
   },
   patient: 
-    [{
+    {
       type: mongoose.Types.ObjectId,
       required: false,
       ref: "User",
-    }],
+    },
   location: { type: { lat: String, lng: String }, required: false },
   emergency:{type:{details:String,contact:String},required:false},
    

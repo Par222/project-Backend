@@ -5,6 +5,7 @@ const {check}=require('express-validator')
 
 
 router.get('/',ambulanceController.getAllAmbulance)
+router.get('/:pid',ambulanceController.getAmbulanceByPatientId)
 router.post('/',[check('plate').not().isEmpty(),
 check('status').not().isEmpty()],ambulanceController.createAmbulance)
 router.patch('/:pid',[],ambulanceController.updateAmbulanceById)
