@@ -23,7 +23,7 @@ const showUser=async(req,res,next)=>{
    
 }
 const createUser=async(req,res,next)=>{
-    const {name,email,password,image}=req.body
+    const {name,email,password,token}=req.body
     const error=validationResult(req)
     if(!error.isEmpty())
     {
@@ -45,16 +45,24 @@ const createUser=async(req,res,next)=>{
             name,
             email,
             password,
-            image,
-            doctors:[]
+            token,
+            image:"",
+            doctors:[],
+            ambulance:[],
+            reports:[]
+
         })
         console.log(Myuser)
-   try{
-    const result=await Myuser.save()
-   }
-   catch{
-    return next(new HttpError('Sign-up failed'),501)
-   }
+   
+     Myuser.save(function(err,result){
+        if (err){
+            console.log(err);
+        }
+        else{
+            console.log(result)
+        }
+    });
+
     res.status(201);
     res.json({user:Myuser.toObject({getters:true})})
 }
@@ -77,11 +85,12 @@ const loginUser=async(req,res,next)=>{
         return next(new HttpError('Invalid passowrd or account does not exsist'),501)
 
     }
-    res.json({message:"Logged-IN"})
+    res.status(201);
+    res.json({user:user.toObject({getters:true})})
    
 }
 const requestAmbulance=async(req,res,next)=>{
-    
+
    
 }
 exports.showUser=showUser
