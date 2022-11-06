@@ -16,12 +16,13 @@ const ambulanceSchema = new Schema({
       required: false,
       ref: "User",
     },
-     request:{
+    request: 
+    {
       type: mongoose.Types.ObjectId,
       required: false,
       ref: "Request",
-
-     },
+    },
+    
   location: { type: { lat: String, lng: String }, required: false },
   emergency:{type:{details:String,contact:String},required:false},
    

@@ -32,10 +32,8 @@ const createAmbulance = async (req, res, next) => {
       status,
       plate,
       driver,
-      patient: "",
       location:{},
-      emergency:{},
-      request:""
+      emergency:{}
 
     });
     let amb;
