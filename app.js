@@ -6,13 +6,16 @@ const reqRoutes=require('./routes/request-routes')
 const bodyParser=require('body-parser')
 const app=express();
 const mongoose=require('mongoose')
-
+const appointmentRoutes = require("./routes/appointment-routes");
 // CORS error handling
-app.use((req,res,next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
-    next();
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+  next();
 });
 
 
@@ -21,6 +24,7 @@ app.use('/api/doctors',doctorRoutes)
 app.use('/api/patient',userRoutes)
 app.use('/api/ambulance',ambulanceRoutes)
 app.use('/api/request',reqRoutes)
+app.use("/api/appointments", appointmentRoutes);
 app.use((error,req,res,next)=>{
 
     if(res.headerSent)

@@ -36,7 +36,6 @@ const doctorSchema = new Schema({
       ref: "Appointment",
     },
   ],
-
   image: {
     type: String,
     required: "Please enter your image",
