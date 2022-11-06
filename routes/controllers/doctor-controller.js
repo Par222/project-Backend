@@ -1,5 +1,4 @@
 const HttpError = require("../errors/http-error");
-const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const Doctor = require("../../modals/doctor");
 const User = require("../../modals/user");
