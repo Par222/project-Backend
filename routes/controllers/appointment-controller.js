@@ -1,4 +1,4 @@
-const { Appointment } = require("../../modals/Appointment");
+const { Appointment } = require("../../modals/appointment");
 const HttpError = require("../errors/http-error");
 const User = require("../../modals/user");
 const Doctor = require("../../modals/doctor");
