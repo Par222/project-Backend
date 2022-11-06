@@ -34,7 +34,8 @@ const createAmbulance = async (req, res, next) => {
       driver,
       patient: "",
       location:{},
-      emergency:{}
+      emergency:{},
+      request:""
 
     });
     let amb;
@@ -89,7 +90,7 @@ const createAmbulance = async (req, res, next) => {
     const pid = req.params.pid;
     let amb;
     try {
-      amb = await Ambulance.findOne({patient:pid,status:"Alloted"});
+      amb = await Ambulance.findOne({request:pid,status:"Alloted"});
     } catch {
       return next(new HttpError("Could not connect to database", 422));
     }
