@@ -14,6 +14,7 @@ const requestSchema = new Schema({
     },
     ambulance:{ 
         type:{location: { type: { lat: String, lng: String }, required: false },
+        name:String,
         emergency:{type:{details:String,contact:String},required:false},
     }}
    

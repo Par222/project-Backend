@@ -22,6 +22,10 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  contact: {
+    type: String,
+    required: false,
+  },
   appointments: [
     {
       type: mongoose.Types.ObjectId,
@@ -39,6 +43,7 @@ const userSchema = new Schema({
     type: mongoose.Types.ObjectId,
     ref: "Ambulance",
   }]
+
 
 });
 module.exports = mongoose.model("User", userSchema);

@@ -47,6 +47,7 @@ const createUser=async(req,res,next)=>{
             password,
             token,
             image:"",
+            contact:"",
             doctors:[],
             ambulance:[],
             reports:[]
@@ -89,10 +90,45 @@ const loginUser=async(req,res,next)=>{
     res.json({user:user.toObject({getters:true})})
    
 }
-const requestAmbulance=async(req,res,next)=>{
-
-   
-}
+const getUserById = async (req, res, next) => {
+    const uid= req.params.uid;
+    let user;
+    try {
+      user = await User.findById(uid)
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+  
+    if (!user) {
+      return next(new HttpError("Could not find user with given id", 404));
+    }
+  
+    res.status(200);
+    res.json({ user: user.toObject({ getters: true }) });
+  };
+const updateUserById = async (req, res, next) => {
+    const uid = req.params.uid;
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      throw new HttpError("Invalid details provided", 501);
+    }
+  
+    let user;
+    try {
+      user = await User.findByIdAndUpdate(uid, req.body,{new:true});
+    } catch {
+      return next(new HttpError("Could not connect to database", 422));
+    }
+    if (!user) {
+      throw new HttpError("Could not find doctor for given id", 404);
+    }
+  
+    res.status(200);
+    res.json({ user: user.toObject({ getters: true }) });
+  };
+ 
 exports.showUser=showUser
 exports.createUser=createUser
 exports.loginUser=loginUser
+exports.getUserById=getUserById
+exports.updateUserById=updateUserById
