@@ -3,8 +3,8 @@ const {v4: uuidv4}=require('uuid')
 const {validationResult}=require('express-validator')
 const User=require('../../modals/user')
 
-
-const showUser=async(req,res,next)=>{
+class Patient{
+ showUser=async(req,res,next)=>{
     let user;
     try{    
     user=await User.find({},'-password')
@@ -22,7 +22,7 @@ const showUser=async(req,res,next)=>{
   
    
 }
-const createUser=async(req,res,next)=>{
+ createUser=async(req,res,next)=>{
     const {name,email,password,token}=req.body
     const error=validationResult(req)
     if(!error.isEmpty())
@@ -67,7 +67,7 @@ const createUser=async(req,res,next)=>{
     res.status(201);
     res.json({user:Myuser.toObject({getters:true})})
 }
-const loginUser=async(req,res,next)=>{
+ loginUser=async(req,res,next)=>{
     const {email,password}=req.body
     const error=validationResult(req)
     if(!error.isEmpty())
@@ -90,7 +90,7 @@ const loginUser=async(req,res,next)=>{
     res.json({user:user.toObject({getters:true})})
    
 }
-const getUserById = async (req, res, next) => {
+ getUserById = async (req, res, next) => {
     const uid= req.params.uid;
     let user;
     try {
@@ -106,7 +106,7 @@ const getUserById = async (req, res, next) => {
     res.status(200);
     res.json({ user: user.toObject({ getters: true }) });
   };
-const updateUserById = async (req, res, next) => {
+ updateUserById = async (req, res, next) => {
     const uid = req.params.uid;
     const error = validationResult(req);
     if (!error.isEmpty()) {
@@ -126,9 +126,5 @@ const updateUserById = async (req, res, next) => {
     res.status(200);
     res.json({ user: user.toObject({ getters: true }) });
   };
- 
-exports.showUser=showUser
-exports.createUser=createUser
-exports.loginUser=loginUser
-exports.getUserById=getUserById
-exports.updateUserById=updateUserById
+}
+module.exports=Patient

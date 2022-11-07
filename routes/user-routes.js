@@ -1,8 +1,8 @@
 const express=require('express')
 const router=express.Router();
-const userController=require('./controllers/user-controller');
+const Patient=require('./controllers/user-controller');
 const {check}=require('express-validator')
-
+const userController=new Patient()
 router.get('/',userController.showUser)
 router.get('/:uid',userController.getUserById)
 router.post('/signup',

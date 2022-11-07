@@ -3,7 +3,8 @@ const { validationResult } = require("express-validator");
 const Doctor = require("../../modals/doctor");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
-const getDoctorById = async (req, res, next) => {
+class Doctors{
+getDoctorById = async (req, res, next) => {
   const docId = req.params.pid;
   let doctor;
   try {
@@ -19,7 +20,7 @@ const getDoctorById = async (req, res, next) => {
   res.status(200);
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
-const searchDoctor = async (req, res, next) => {
+ searchDoctor = async (req, res, next) => {
   let name=req.params.name
 
   let doctor;
@@ -34,7 +35,7 @@ const searchDoctor = async (req, res, next) => {
   res.status(200);
   res.json({ doctors: doctor.map((d) => d.toObject({ getters: true })) });
 };
-const getAllDoctor = async (req, res, next) => {
+ getAllDoctor = async (req, res, next) => {
   let doctor;
   try {
     doctor = await Doctor.find({});
@@ -49,7 +50,7 @@ const getAllDoctor = async (req, res, next) => {
   res.json({ doctors: doctor.map((d) => d.toObject({ getters: true })) });
 };
 
-const createDoctor = async (req, res, next) => {
+ createDoctor = async (req, res, next) => {
   const { name, des, age, expertise, image, fees } = req.body;
   const error = validationResult(req);
   console.log(req.body);
@@ -81,7 +82,7 @@ const createDoctor = async (req, res, next) => {
   res.status(201);
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
-const updateDoctorById = async (req, res, next) => {
+updateDoctorById = async (req, res, next) => {
   const { name, des, age, expertise, image, fees } = req.body;
   const docId = req.params.pid;
   const error = validationResult(req);
@@ -102,7 +103,7 @@ const updateDoctorById = async (req, res, next) => {
   res.status(200);
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
-const deleteDoctorById = async (req, res, next) => {
+ deleteDoctorById = async (req, res, next) => {
   const docId = req.params.pid;
   let doctor;
   try {
@@ -117,10 +118,5 @@ const deleteDoctorById = async (req, res, next) => {
   res.status(200);
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
-
-exports.getDoctorById = getDoctorById;
-exports.createDoctor = createDoctor;
-exports.updateDoctorById = updateDoctorById;
-exports.deleteDoctorById = deleteDoctorById;
-exports.getAllDoctor = getAllDoctor;
-exports.searchDoctor = searchDoctor;
+}
+module.exports=Doctors

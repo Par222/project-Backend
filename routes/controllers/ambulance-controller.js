@@ -4,7 +4,8 @@ const { validationResult } = require("express-validator");
 const Ambulance = require("../../modals/ambulance");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
-const getAllAmbulance = async (req, res, next) => {
+class Ambulances{
+ getAllAmbulance = async (req, res, next) => {
  
   let ambulance;
   try {
@@ -20,7 +21,7 @@ const getAllAmbulance = async (req, res, next) => {
   res.status(200);
   res.json({ ambulances: ambulance.map((amb) => amb.toObject({ getters: true })) });
 };
-const createAmbulance = async (req, res, next) => {
+createAmbulance = async (req, res, next) => {
     const { plate,driver,status } = req.body;
     const error = validationResult(req);
     console.log(req.body);
@@ -49,7 +50,7 @@ const createAmbulance = async (req, res, next) => {
     res.status(201);
     res.json({ ambulance: ambulance.toObject({ getters: true }) });
   };
-  const updateAmbulanceById = async (req, res, next) => {
+   updateAmbulanceById = async (req, res, next) => {
     const ambId = req.params.pid;
     const error = validationResult(req);
     if (!error.isEmpty()) {
@@ -69,7 +70,7 @@ const createAmbulance = async (req, res, next) => {
     res.status(200);
     res.json({ ambulances: ambulance.toObject({ getters: true }) });
   };
-  const deleteAmbulanceById = async (req, res, next) => {
+   deleteAmbulanceById = async (req, res, next) => {
     const ambId = req.params.pid;
     let ambulance;
     try {
@@ -84,7 +85,7 @@ const createAmbulance = async (req, res, next) => {
     res.status(200);
     res.json({ ambulance: ambulance.toObject({ getters: true }) });
   };
-  const getAmbulanceByPatientId = async (req, res, next) => {
+   getAmbulanceByPatientId = async (req, res, next) => {
     const pid = req.params.pid;
     let amb;
     try {
@@ -100,14 +101,10 @@ const createAmbulance = async (req, res, next) => {
     res.status(200);
     res.json({ ambulance: amb.toObject({ getters: true }) });
   };
+}
+  module.exports=Ambulances
 
-  
 
 
-exports.getAllAmbulance = getAllAmbulance;
-exports.deleteAmbulanceById=deleteAmbulanceById
-exports.updateAmbulanceById=updateAmbulanceById
-exports.createAmbulance=createAmbulance
-exports.getAmbulanceByPatientId=getAmbulanceByPatientId
 
 

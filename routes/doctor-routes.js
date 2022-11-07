@@ -1,7 +1,8 @@
 const express=require('express');
 const router=express.Router();
-const doctorController=require('./controllers/doctor-controller')
+const Doctor=require('./controllers/doctor-controller')
 const {check}=require('express-validator')
+const doctorController=new Doctor()
 
 
 router.get('/:pid',doctorController.getDoctorById)
