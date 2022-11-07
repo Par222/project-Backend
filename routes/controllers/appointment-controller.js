@@ -2,6 +2,7 @@ const { Appointment } = require("../../modals/appointment");
 const HttpError = require("../errors/http-error");
 const User = require("../../modals/user");
 const Doctor = require("../../modals/doctor");
+const { findById } = require("../../modals/ambulance");
 
 const fetchPatientById = async (patientID) => {
   let user;
@@ -43,19 +44,10 @@ const fetchAllAppointments = async (req, res, next) => {
     throw new HttpError("No appointments found!", 500);
   }
 
-  const dataToBeReturned = appointments.map(async (appointment) => {
-    const patientData = await fetchPatientById(appointment?.patient);
-    const doctorData = await fetchDoctorById(appointment?.doctor);
-
-    return {
-      appointment: appointment.toObject({ getters: true }),
-      patientData: patientData,
-      doctorData: doctorData,
-    };
-  });
+ 
   res.status(200),
     res.json({
-      appointments: dataToBeReturned,
+      appointments: appointments.map((a)=>a.toObject({getters:true})),
     });
 };
 
@@ -207,17 +199,9 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
 
-    return {
-      appointment: appointment.toObject({ getters: true }),
-      patientData: patientData,
-      doctorData: doctorData,
-    };
-  });
-  res.status(200),
-    res.json({
-      appointments: dataToBeReturned,
-    });
-};
+  })
+  res.status(200)}
+  
 
 const fetchAppointmentsByDoctor = async (req, res, next) => {
   const doctorID = req.params.doctorID;
@@ -252,30 +236,20 @@ const fetchAppointmentsByPatient = async (req, res, next) => {
   const patientID = req.params.patientID;
   let appointments;
   try {
-    appointments = await Appointment.find({
-      patient: patientID,
-    });
+    appointments = await Appointment.find({patient: patientID});
   } catch (error) {
     throw new HttpError("Error fetching appointments!", 422);
   }
   if (!appointments) {
     throw new HttpError("No appointments found!", 500);
   }
-  const dataToBeReturned = appointments.map(async (appointment) => {
-    const patientData = await fetchPatientById(appointment?.patient);
-    const doctorData = await fetchDoctorById(appointment?.doctor);
-
-    return {
-      appointment: appointment.toObject({ getters: true }),
-      patientData: patientData,
-      doctorData: doctorData,
-    };
-  });
+  
   res.status(200),
     res.json({
-      appointments: dataToBeReturned,
+      appointments: appointments.map((a)=>a.toObject({getters:true})),
     });
-};
+
+  }
 
 const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
   const patientID = req.params.patientID;
@@ -297,13 +271,14 @@ const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
   const dataToBeReturned = appointments.map(async (appointment) => {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
-
+     
     return {
       appointment: appointment.toObject({ getters: true }),
       patientData: patientData,
       doctorData: doctorData,
     };
   });
+  
   res.status(200),
     res.json({
       appointments: dataToBeReturned,
@@ -315,8 +290,7 @@ module.exports.fetchAllAppointments = fetchAllAppointments;
 module.exports.fetchAppointmentByID = fetchAppointmentByID;
 module.exports.updateAppointment = updateAppointment;
 module.exports.deleteAppointment = deleteAppointment;
-module.exports.fetchUpcomingAppointmentsByDoctor =
-  fetchUpcomingAppointmentsByDoctor;
+module.exports.fetchUpcomingAppointmentsByDoctor =fetchUpcomingAppointmentsByDoctor;
 module.exports.fetchAppointmentsByDoctor = fetchAppointmentsByDoctor;
 module.exports.fetchAppointmentsByPatient = fetchAppointmentsByPatient;
 module.exports.fetchUpcomingAppointmentsByPatient =

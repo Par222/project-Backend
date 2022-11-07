@@ -1,8 +1,8 @@
 const express=require('express');
 const router=express.Router();
-const ambulanceController=require('./controllers/ambulance-controller')
+const Ambulance=require('./controllers/ambulance-controller')
 const {check}=require('express-validator')
-
+const ambulanceController=new Ambulance();
 
 router.get('/',ambulanceController.getAllAmbulance)
 router.get('/:pid',ambulanceController.getAmbulanceByPatientId)

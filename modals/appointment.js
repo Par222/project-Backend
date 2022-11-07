@@ -31,6 +31,10 @@ const AppointmentSchema = new mongoose.Schema(
     meet_link: {
       type: String,
     },
+    online_type: {
+      type: String,
+      required: true,
+    },
     illness: {
       type: String,
       required: true,
@@ -41,7 +45,7 @@ const AppointmentSchema = new mongoose.Schema(
           type: String,
         },
         media: {
-          type: String,
+          type: Array,
         },
       },
     },

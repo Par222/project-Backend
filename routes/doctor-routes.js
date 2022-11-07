@@ -1,7 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const doctorController = require("./controllers/doctor-controller");
-const { check } = require("express-validator");
+const express=require('express');
+const router=express.Router();
+const Doctor=require('./controllers/doctor-controller')
+const {check}=require('express-validator')
+const doctorController=new Doctor()
 
 router.get("/:pid", doctorController.getDoctorById);
 router.post(
@@ -27,7 +28,7 @@ router.post(
     check("email").normalizeEmail().isEmail(),
     check("password").isLength({ min: 6 }),
   ],
-  userController.registerDoctor
+  doctorController.registerDoctor
 );
 router.post(
   "/login",
@@ -35,7 +36,7 @@ router.post(
     check("email").normalizeEmail().isEmail(),
     check("password").isLength({ min: 6 }),
   ],
-  userController.loginDoctor
+  doctorController.loginDoctor
 );
 
 module.exports = router;
