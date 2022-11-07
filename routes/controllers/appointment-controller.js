@@ -193,10 +193,10 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
   const currentDate = new Date();
   let appointments;
   try {
-    appointments = await Appointment.find({
-      doctor: doctorID,
-      slot: { date: { gte: currentDate } },
-    });
+    appointments = await Appointment.find(
+      { doctor: doctorID },
+      { slot: { date: { gte: currentDate } } }
+    );
   } catch (error) {
     throw new HttpError("Error fetching appointments!", 422);
   }
@@ -282,10 +282,12 @@ const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
   const currentDate = new Date();
   let appointments;
   try {
-    appointments = await Appointment.find({
-      patient: patientID,
-      slot: { date: { gte: currentDate } },
-    });
+    appointments = await Appointment.find(
+      {
+        patient: patientID,
+      },
+      { slot: { date: { gte: currentDate } } }
+    );
   } catch (error) {
     throw new HttpError("Error fetching appointments!", 422);
   }
@@ -317,4 +319,5 @@ module.exports.fetchUpcomingAppointmentsByDoctor =
   fetchUpcomingAppointmentsByDoctor;
 module.exports.fetchAppointmentsByDoctor = fetchAppointmentsByDoctor;
 module.exports.fetchAppointmentsByPatient = fetchAppointmentsByPatient;
-module.exports.fetchUpcomingAppointmentsByPatient = fetchUpcomingAppointmentsByPatient;
+module.exports.fetchUpcomingAppointmentsByPatient =
+  fetchUpcomingAppointmentsByPatient;

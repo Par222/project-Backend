@@ -20,11 +20,11 @@ const getDoctorById = async (req, res, next) => {
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
 const searchDoctor = async (req, res, next) => {
-  let name=req.params.name
+  let name = req.params.name;
 
   let doctor;
   try {
-    doctor = await Doctor.find({name:{$regex:name}});
+    doctor = await Doctor.find({ name: { $regex: name } });
   } catch {
     return next(new HttpError("Database disconnected"), 422);
   }
@@ -81,6 +81,56 @@ const createDoctor = async (req, res, next) => {
   res.status(201);
   res.json({ doctor: doctor.toObject({ getters: true }) });
 };
+
+const registerDoctor = async (req, res, next) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    throw new HttpError("Invalid details provided", 501);
+  }
+  let doctor;
+  try {
+    doctor = await Doctor.findOne({ email: email });
+  } catch {
+    return next(new HttpError("Could not connect to databse"), 422);
+  }
+  if (doctor) {
+    return next(new HttpError("Account exists,Login instead"), 501);
+  }
+
+  const newDoctor = new Doctor(req.body.doctor);
+
+  try {
+    doctor = await newDoctor.save();
+  } catch (error) {
+    throw new HttpError("Error creating doctor", 422);
+  }
+  if (doctor) {
+    res.status(201);
+    res.json({ doctor: doctor.toObject({ getters: true }) });
+  }
+};
+
+const loginDoctor = async (req, res, next) => {
+  const { email, password } = req.body;
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    throw new HttpError("Invalid details provided", 501);
+  }
+  let doctor;
+  try {
+    doctor = await Doctor.findOne({ email: email });
+  } catch {
+    return next(new HttpError("Could not connect to databse"), 422);
+  }
+  if (!doctor || doctor.password !== password) {
+    return next(
+      new HttpError("Invalid passowrd or account does not exsist"),
+      501
+    );
+  }
+  res.status(201);
+  res.json({ doctor: doctor.toObject({ getters: true }) });
+};
 const updateDoctorById = async (req, res, next) => {
   const { name, des, age, expertise, image, fees } = req.body;
   const docId = req.params.pid;
@@ -91,7 +141,7 @@ const updateDoctorById = async (req, res, next) => {
 
   let doctor;
   try {
-    doctor = await Doctor.findByIdAndUpdate(docId, req.body,{new:true});
+    doctor = await Doctor.findByIdAndUpdate(docId, req.body, { new: true });
   } catch {
     return next(new HttpError("Could not connect to database", 422));
   }
@@ -106,7 +156,7 @@ const deleteDoctorById = async (req, res, next) => {
   const docId = req.params.pid;
   let doctor;
   try {
-    doctor = await Doctor.findByIdAndDelete(docId,);
+    doctor = await Doctor.findByIdAndDelete(docId);
   } catch {
     return next(new HttpError("Could not connect  to database"), 422);
   }
@@ -124,3 +174,5 @@ exports.updateDoctorById = updateDoctorById;
 exports.deleteDoctorById = deleteDoctorById;
 exports.getAllDoctor = getAllDoctor;
 exports.searchDoctor = searchDoctor;
+exports.registerDoctor = registerDoctor;
+exports.loginDoctor = loginDoctor;

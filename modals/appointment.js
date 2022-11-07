@@ -53,14 +53,16 @@ const AppointmentSchema = new mongoose.Schema(
       type: String,
     },
     prescription: {
-      text: {
-        type: String,
-      },
-      media: {
-        type: String,
+      type: {
+        text: {
+          type: String,
+        },
+        media: {
+          type: String,
+        },
       },
     },
-    approved_by: {
+    status: {
       type: {
         doctor: {
           type: String,
