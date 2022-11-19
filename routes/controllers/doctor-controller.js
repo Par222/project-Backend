@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const Doctor = require("../../modals/doctor");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
+const testController =require("../../services/utils")
 class Doctors{
 getDoctorById = async (req, res, next) => {
   const docId = req.params.pid;
@@ -22,7 +23,7 @@ getDoctorById = async (req, res, next) => {
 };
  searchDoctor = async (req, res, next) => {
   let name=req.params.name
-
+  
   let doctor;
   try {
     doctor = await Doctor.find({name:{$regex:name}});
@@ -57,8 +58,13 @@ getDoctorById = async (req, res, next) => {
   if (!error.isEmpty()) {
     return next(new HttpError("Invalid details provided", 501));
   }
-
-  const doctor = new Doctor({
+  let AllDoctors;
+  try{
+  AllDoctors=await Doctor.find({})
+  }catch(err){
+    console.log(err)
+  }
+  const doctor = {
     name,
     des,
     age,
@@ -66,21 +72,21 @@ getDoctorById = async (req, res, next) => {
     image,
     fees,
     patients: [],
-  });
-  let user;
+  };
+  testController.createDoctor(AllDoctors,doctor)
+ 
+  await Doctor.deleteMany({})
   try {
-    user = await doctor.save();
+   await Doctor.insertMany(AllDoctors)
   } catch (err) {
     res.send(err.message);
     // return next (new HttpError("Could not connect to database",501))
   }
-  if (!user) {
-    return next(new HttpError("Invalid user", 404));
-  }
+ 
   console.log(doctor);
 
   res.status(201);
-  res.json({ doctor: doctor.toObject({ getters: true }) });
+  res.json({ doctor: "Doctor Added" });
 };
 updateDoctorById = async (req, res, next) => {
   const { name, des, age, expertise, image, fees } = req.body;
@@ -105,15 +111,21 @@ updateDoctorById = async (req, res, next) => {
 };
  deleteDoctorById = async (req, res, next) => {
   const docId = req.params.pid;
+  let AllDoctors;
+  try{
+  AllDoctors=await Doctor.find({})
+  }catch(err){
+    console.log(err)
+  }
+  testController.deleteDoctor(AllDoctors,docId)
   let doctor;
   try {
-    doctor = await Doctor.findByIdAndDelete(docId,);
+    await Doctor.deleteMany({});
   } catch {
     return next(new HttpError("Could not connect  to database"), 422);
   }
-  if (!doctor) {
-    return next(new HttpError("Could not find a doctor for given id"), 404);
-  }
+   await Doctor.insertMany(AllDoctors)
+  
 
   res.status(200);
   res.json({ doctor: doctor.toObject({ getters: true }) });
