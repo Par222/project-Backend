@@ -3,6 +3,7 @@ const HttpError = require("../errors/http-error");
 const User = require("../../modals/user");
 const Doctor = require("../../modals/doctor");
 const { findById } = require("../../modals/ambulance");
+const testController=require("../../services/utils")
 
 const fetchPatientById = async (patientID) => {
   console.log("patient", patientID);
@@ -75,24 +76,20 @@ const fetchAppointmentByID = async (req, res, next) => {
 const updateAppointment = async (req, res, next) => {
   const appointmentID = req.params.appointmentID;
   const newAppointment = req.body.appointment;
-  let updatedAppointment;
+  let AllApps
   try {
-    updatedAppointment = await Appointment.findByIdAndUpdate(
-      appointmentID,
-      _omit(newAppointment, _id),
-      { new: true }
-    );
+    AllApps = await Appointment.find({});
   } catch (error) {
     throw new HttpError("Error updating the required appointment!", 422);
   }
-  if (!updatedAppointment) {
-    throw new HttpError("No appointment found!", 500);
-  }
+  testController.updateAppByPatientId(AllApps,appointmentID,newAppointment.status)
+  await Doctor.deleteMany({})
+  let updatedAppointment=await Doctor.insertMany(AllApps)
   const patientData = await fetchPatientById(updatedAppointment?.patient);
   const doctorData = await fetchDoctorById(updatedAppointment?.doctor);
   res.status(200);
   res.json({
-    appointment: updatedAppointment.toObject({ getters: true }),
+    appointment: AllApps.toObject({ getters: true }),
     patientData: patientData,
     doctorData: doctorData,
   });

@@ -10,7 +10,7 @@ const ambulanceSchema = new Schema({
     type: String,
     required: true,
   },
-  patient: 
+    patient: 
     {
       type: mongoose.Types.ObjectId,
       required: false,
