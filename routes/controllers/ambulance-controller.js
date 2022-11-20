@@ -15,7 +15,7 @@ class Ambulances{
   }
 
   if (!ambulance) {
-    return next(new HttpError("Could not find any ambulance", 501));
+    return next(new HttpError("Could not find any ambulance",404));
   }
 
   res.status(200);
