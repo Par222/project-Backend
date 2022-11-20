@@ -10,7 +10,7 @@ class Doctors {
     try {
       doctor = await Doctor.findById(docId);
     } catch {
-      return next(new HttpError("Could not connect to database", 422));
+      return next(new HttpError("Could not connect to database", 420));
     }
 
     if (!doctor) {
