@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 const Ambulance = require("../../modals/ambulance");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
-const testController=require("../../services/utils")
 class Ambulances{
  getAllAmbulance = async (req, res, next) => {
  
@@ -89,17 +88,11 @@ createAmbulance = async (req, res, next) => {
    getAmbulanceByPatientId = async (req, res, next) => {
     const pid = req.params.pid;
     let amb;
-    let AllAmbs
-    AllAmbs=await Ambulance.find({})
     try {
-      testController.getAmbByPatientId(AllAmbs,pid)
-
+      amb = await Ambulance.findOne({request:pid,status:"Alloted"});
     } catch {
       return next(new HttpError("Could not connect to database", 422));
     }
-     await Ambulance.deleteMany({})
-     await Ambulance.insertMany(AllAmbs)
-     
   
     if (!amb) {
       return next(new HttpError("Could not find patient with given id", 404));

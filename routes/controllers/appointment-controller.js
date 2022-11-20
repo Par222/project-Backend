@@ -73,27 +73,7 @@ const fetchAppointmentByID = async (req, res, next) => {
   });
 };
 
-const updateAppointment = async (req, res, next) => {
-  const appointmentID = req.params.appointmentID;
-  const newAppointment = req.body.appointment;
-  let AllApps
-  try {
-    AllApps = await Appointment.find({});
-  } catch (error) {
-    throw new HttpError("Error updating the required appointment!", 422);
-  }
-  testController.updateAppByPatientId(AllApps,appointmentID,newAppointment.status)
-  await Doctor.deleteMany({})
-  let updatedAppointment=await Doctor.insertMany(AllApps)
-  const patientData = await fetchPatientById(updatedAppointment?.patient);
-  const doctorData = await fetchDoctorById(updatedAppointment?.doctor);
-  res.status(200);
-  res.json({
-    appointment: AllApps.toObject({ getters: true }),
-    patientData: patientData,
-    doctorData: doctorData,
-  });
-};
+
 
 const deleteAppointment = async (req, res, next) => {
   const appointmentID = req.params.appointmentID;
