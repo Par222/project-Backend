@@ -71,6 +71,7 @@ const AppointmentSchema = new mongoose.Schema(
         doctor: {
           type: String,
           default: "Pending",
+          required:true
         },
       },
     },

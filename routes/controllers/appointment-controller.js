@@ -139,6 +139,7 @@ const createAppointment = async (req, res, next) => {
   try {
     request = await appointmentRequest.save();
   } catch (error) {
+    console.log(error)
     throw new HttpError("Error requesting appointment!", 422);
   }
   if (!request) {
