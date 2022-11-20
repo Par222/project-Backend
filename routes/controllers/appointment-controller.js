@@ -72,6 +72,31 @@ const fetchAppointmentByID = async (req, res, next) => {
     doctorData: doctorData,
   });
 };
+const updateAppointment = async (req, res, next) => {
+  const appointmentID = req.params.appointmentID;
+  const newAppointment = req.body.appointment;
+  let updatedAppointment;
+  try {
+    updatedAppointment = await Appointment.findByIdAndUpdate(
+      appointmentID,
+      _omit(newAppointment, _id),
+      { new: true }
+    );
+  } catch (error) {
+    throw new HttpError("Error updating the required appointment!", 422);
+  }
+  if (!updatedAppointment) {
+    throw new HttpError("No appointment found!", 500);
+  }
+  const patientData = await fetchPatientById(updatedAppointment?.patient);
+  const doctorData = await fetchDoctorById(updatedAppointment?.doctor);
+  res.status(200);
+  res.json({
+    appointment: updatedAppointment.toObject({ getters: true }),
+    patientData: patientData,
+    doctorData: doctorData,
+  });
+};
 
 
 
