@@ -12,16 +12,6 @@ class Doctors {
     } catch {
       return next(new HttpError("Could not connect to database", 422));
     }
-const testController =require("../../services/utils")
-class Doctors{
-getDoctorById = async (req, res, next) => {
-  const docId = req.params.pid;
-  let doctor;
-  try {
-    doctor = await Doctor.findById(docId);
-  } catch {
-    return next(new HttpError("Could not connect to database", 422));
-  }
 
     if (!doctor) {
       return next(new HttpError("Could not find doctor with given id", 404));
