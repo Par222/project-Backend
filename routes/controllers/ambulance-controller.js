@@ -1,7 +1,7 @@
 const HttpError = require("../errors/http-error");
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
-const Ambulance = require("../../modals/Ambulance");
+const Ambulance = require("../../modals/ambulance");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
 class Ambulances{
