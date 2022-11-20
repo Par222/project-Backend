@@ -3,7 +3,7 @@ const userTypeController = require("./controllers/usertype-controller");
 const { check } = require("express-validator");
 const router = express.Router();
 
-router.get("/:userID", userTypeController.fetchUserTypeById);
+router.get("/:userEmail", userTypeController.fetchUserTypeById);
 
 router.post("/", [
   check("username").not().isEmpty(),

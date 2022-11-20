@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const Doctor=require('./controllers/doctor-controller')
 const {check}=require('express-validator')
-const doctorController=new Doctor()
+const doctorController=new Doctor();
 
 router.get("/:pid", doctorController.getDoctorById);
 router.post(

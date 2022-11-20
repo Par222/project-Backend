@@ -90,7 +90,7 @@ class Doctors {
     }
     let doctor;
     try {
-      doctor = await Doctor.findOne({ email: email });
+      doctor = await Doctor.findOne({ email: req.body.email });
     } catch {
       return next(new HttpError("Could not connect to databse"), 422);
     }
@@ -98,9 +98,10 @@ class Doctors {
       return next(new HttpError("Account exists,Login instead"), 501);
     }
 
-    const newDoctor = new Doctor(req.body.doctor);
+    const newDoctor = new Doctor(req.body);
 
     try {
+      console.log(req.body);
       doctor = await newDoctor.save();
     } catch (error) {
       throw new HttpError("Error creating doctor", 422);
