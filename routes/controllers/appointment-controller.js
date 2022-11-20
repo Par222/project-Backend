@@ -3,7 +3,7 @@ const HttpError = require("../errors/http-error");
 const User = require("../../modals/user");
 const Doctor = require("../../modals/doctor");
 const { findById } = require("../../modals/ambulance");
-const testController=require("../../services/utils")
+const testController = require("../../services/utils");
 
 const fetchPatientById = async (patientID) => {
   console.log("patient", patientID);
@@ -79,10 +79,11 @@ const updateAppointment = async (req, res, next) => {
   try {
     updatedAppointment = await Appointment.findByIdAndUpdate(
       appointmentID,
-      _omit(newAppointment, _id),
+      newAppointment,
       { new: true }
     );
   } catch (error) {
+    console.log(error);
     throw new HttpError("Error updating the required appointment!", 422);
   }
   if (!updatedAppointment) {
@@ -97,8 +98,6 @@ const updateAppointment = async (req, res, next) => {
     doctorData: doctorData,
   });
 };
-
-
 
 const deleteAppointment = async (req, res, next) => {
   const appointmentID = req.params.appointmentID;
@@ -144,7 +143,7 @@ const createAppointment = async (req, res, next) => {
   try {
     request = await appointmentRequest.save();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new HttpError("Error requesting appointment!", 422);
   }
   if (!request) {
@@ -203,7 +202,7 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
     const data = {
-      appointment: appointment,
+      appointment: appointment.toObject({ getters: true }),
       patientData: patientData,
       doctorData: doctorData,
     };
@@ -249,7 +248,7 @@ const fetchAppointmentsByDoctor = async (req, res, next) => {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
     const data = {
-      appointment: appointment,
+      appointment: appointment.toObject({ getters: true }),
       patientData: patientData,
       doctorData: doctorData,
     };
@@ -302,13 +301,13 @@ const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
     const data = {
-      appointment: appointment,
+      appointment: appointment.toObject({ getters: true }),
       patientData: patientData,
       doctorData: doctorData,
     };
     dataToBeReturned.push(data);
   }
-  
+
   res.status(200),
     res.json({
       appointments: dataToBeReturned,
