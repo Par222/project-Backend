@@ -5,15 +5,16 @@ const Doctor = require("../../modals/doctor");
 const { findById } = require("../../modals/ambulance");
 
 const fetchPatientById = async (patientID) => {
+  console.log("patient", patientID);
   let user;
   try {
     user = await User.findById(patientID);
-  } catch {
-    return next(new HttpError("Could not connect to database", 422));
+  } catch (error) {
+    console.log(error);
   }
 
   if (!user) {
-    return next(new HttpError("Could not find user with given id", 404));
+    return {};
   }
   return user.toObject({ getters: true });
 };
@@ -23,11 +24,11 @@ const fetchDoctorById = async (docId) => {
   try {
     doctor = await Doctor.findById(docId);
   } catch {
-    return next(new HttpError("Could not connect to database", 422));
+    console.log(error);
   }
 
   if (!doctor) {
-    return next(new HttpError("Could not find doctor with given id", 404));
+    return {};
   }
 
   return doctor.toObject({ getters: true });
@@ -194,10 +195,18 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
   if (!appointments) {
     throw new HttpError("No appointments found!", 500);
   }
-  const dataToBeReturned = appointments.map(async (appointment) => {
+  const dataToBeReturned = [];
+  for (let appointment of appointments) {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
-  });
+    const data = {
+      appointment: appointment,
+      patientData: patientData,
+      doctorData: doctorData,
+    };
+    dataToBeReturned.push(data);
+  }
+
   res.status(200);
   res.json({
     appointments: dataToBeReturned,
@@ -206,6 +215,7 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
 
 const fetchAppointmentsByDoctor = async (req, res, next) => {
   const doctorID = req.params.doctorID;
+  console.log(doctorID);
   let appointments;
   try {
     appointments = await Appointment.find({
@@ -217,20 +227,36 @@ const fetchAppointmentsByDoctor = async (req, res, next) => {
   if (!appointments) {
     throw new HttpError("No appointments found!", 500);
   }
-  const dataToBeReturned = appointments.map(async (appointment) => {
+  console.log(appointments);
+  // const dataToBeReturned = appointments.map(async (appointment) => {
+  //   const patientData = await fetchPatientById(appointment?.patient);
+  //   console.log("pd", patientData)
+  //   const doctorData = await fetchDoctorById(appointment?.doctor);
+  //   console.log("dd", doctorData)
+
+  //   return {
+  //     appointment: appointment.toObject({ getters: true }),
+  //     patientData: patientData,
+  //     doctorData: doctorData,
+  //   };
+  // });
+
+  const dataToBeReturned = [];
+  for (let appointment of appointments) {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
-
-    return {
-      appointment: appointment.toObject({ getters: true }),
+    const data = {
+      appointment: appointment,
       patientData: patientData,
       doctorData: doctorData,
     };
+    dataToBeReturned.push(data);
+  }
+
+  res.status(200);
+  res.json({
+    appointments: dataToBeReturned,
   });
-  res.status(200),
-    res.json({
-      appointments: dataToBeReturned,
-    });
 };
 
 const fetchAppointmentsByPatient = async (req, res, next) => {
@@ -268,17 +294,18 @@ const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
   if (!appointments) {
     throw new HttpError("No appointments found!", 500);
   }
-  const dataToBeReturned = appointments.map(async (appointment) => {
+  const dataToBeReturned = [];
+  for (let appointment of appointments) {
     const patientData = await fetchPatientById(appointment?.patient);
     const doctorData = await fetchDoctorById(appointment?.doctor);
-
-    return {
-      appointment: appointment.toObject({ getters: true }),
+    const data = {
+      appointment: appointment,
       patientData: patientData,
       doctorData: doctorData,
     };
-  });
-
+    dataToBeReturned.push(data);
+  }
+  
   res.status(200),
     res.json({
       appointments: dataToBeReturned,
