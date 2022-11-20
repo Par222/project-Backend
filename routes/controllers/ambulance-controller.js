@@ -11,7 +11,7 @@ class Ambulances{
   try {
      ambulance= await Ambulance.find({});
   } catch {
-    return next(new HttpError("Could not connect to database", 422));
+    return next(new HttpError("Could not connect to database", 420));
   }
 
   if (!ambulance) {
