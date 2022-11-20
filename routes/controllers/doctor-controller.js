@@ -1,8 +1,7 @@
 const HttpError = require("../errors/http-error");
 const { validationResult } = require("express-validator");
 const Doctor = require("../../modals/doctor");
-const User = require("../../modals/user");
-const { default: mongoose } = require("mongoose");
+
 class Doctors {
   getDoctorById = async (req, res, next) => {
     const docId = req.params.pid;

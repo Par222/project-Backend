@@ -2,8 +2,7 @@ const { Appointment } = require("../../modals/appointment");
 const HttpError = require("../errors/http-error");
 const User = require("../../modals/user");
 const Doctor = require("../../modals/doctor");
-const { findById } = require("../../modals/ambulance");
-const testController = require("../../services/utils");
+
 
 const fetchPatientById = async (patientID) => {
   console.log("patient", patientID);

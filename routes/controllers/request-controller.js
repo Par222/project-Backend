@@ -1,6 +1,6 @@
 const HttpError = require("../errors/http-error");
 const Request = require("../../modals/Request");
-const User = require("../../modals/user");
+
 const createReq = async (req, res, next) => {
     const { patient,ambulance,status} = req.body;
     console.log(req.body);
