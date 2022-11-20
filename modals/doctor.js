@@ -6,6 +6,18 @@ const doctorSchema = new Schema({
     type: String,
     required: "Please enter your name",
   },
+  token: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
   des: {
     type: String,
     required: "Please enter your description",

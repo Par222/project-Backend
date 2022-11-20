@@ -31,9 +31,9 @@ const AppointmentSchema = new mongoose.Schema(
     meet_link: {
       type: String,
     },
-    online_type:{
-        type:String,
-        required:true
+    online_type: {
+      type: String,
+      required: true,
     },
     illness: {
       type: String,
@@ -57,19 +57,23 @@ const AppointmentSchema = new mongoose.Schema(
       type: String,
     },
     prescription: {
-    type:{
-      text: {
-        type: String,
+      type: {
+        text: {
+          type: String,
+        },
+        media: {
+          type: String,
+        },
       },
-      media: {
-        type: String,
-      },
-    }
-},
+    },
     status: {
-        type: String,
-        required:true
+      type: {
+        doctor: {
+          type: String,
+          default: "Pending",
+        },
       },
+    },
   }
   // { _id: false }
 );

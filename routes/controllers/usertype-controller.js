@@ -19,11 +19,11 @@ const setUserType = async (req, res, next) => {
 };
 
 const fetchUserTypeById = async (req, res, next) => {
-  const userID = req.params.userID;
+  const userEmail = req.params.userEmail;
   let userData;
   try {
     userData = await UserType.findOne({
-      $or: [{ patientID: userID }, { doctorID: userID }],
+      email: userEmail
     });
     console.log(userData)
   } catch (error) {
