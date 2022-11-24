@@ -25,7 +25,7 @@ const fetchDepInfo = async (req, res, next) => {
       $=cheerio.load(html)  
       }
       dep=$('p').text()
-      res.send($.html())
+      res.send($.html)
     })
   };
   
