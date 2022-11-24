@@ -8,6 +8,7 @@ const app = express();
 const mongoose = require("mongoose");
 const appointmentRoutes = require("./routes/appointment-routes");
 const userTypeRoutes = require("./routes/usertype-routes");
+const scrapeRoutes=require("./routes/scrape-routes")
 
 // CORS error handling
 app.use((req, res, next) => {
@@ -27,6 +28,7 @@ app.use("/api/ambulance", ambulanceRoutes);
 app.use("/api/request", reqRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/user-type", userTypeRoutes);
+app.use("/api/scrape",scrapeRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headerSent) {
