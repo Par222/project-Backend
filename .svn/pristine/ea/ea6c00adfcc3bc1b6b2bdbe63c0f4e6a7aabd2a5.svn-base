@@ -1,0 +1,59 @@
+import { useEffect, useState, useContext } from "react";
+import {Line, Bar} from "react-chartjs-2";
+import {Chart as ChartJS} from 'chart.js/auto';
+import { DUMMY_DOCTORS } from "../../pages/doctordetails";
+import { DoctorListContext } from "./DoctorContext";
+function BarChart(){
+    const [userData, setUserData] = useState({
+        labels: [],
+        datasets: [{
+            label: "Fees",
+            data: [],
+            backgroundColor: ['#2f80ed'],
+            barPercentage: 0.5
+        }]
+    });
+    const {doctorsList, updateDoctorsList} = useContext(DoctorListContext)
+    useEffect(() => {
+        setUserData({
+        labels: doctorsList?.map((data) => data.name),
+        datasets: [{
+            label: "Fees",
+            data: doctorsList?.map((data) => data.fees),
+            backgroundColor: ['#2f80ed'],
+            barPercentage: 0.5
+        }]
+    })
+    },[doctorsList])
+    const options = {
+      scales: {
+          x: {
+              ticks: {
+                  font: {
+                      size: 8,
+                  }
+                  
+              },
+          },
+          y: {
+                    ticks: {
+                        precision: 0
+                    }
+                }
+    
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+  }
+};
+    return(
+        <div>
+            <Bar data = {userData} options={options}/>
+        </div>
+    );
+}
+export default BarChart;

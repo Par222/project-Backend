@@ -1,0 +1,40 @@
+import { AmbulanceListContext } from "./AmbulanceContext";
+import { useContext } from "react";
+import AllotRow from "./AllotRow";
+function AllotTable(props){
+    const {ambulanceList, updateAmbulanceList} = useContext(AmbulanceListContext)
+    console.log(ambulanceList)
+    console.log(props,'req')
+    const ambTable = ambulanceList?.filter((obj => obj.status === "Free")).map((amb, index) => (<AllotRow amb={amb} {...props} key={ambulanceList.id} deleteUser={props.deleteUser} showModal={props.showModal} closeHandler={props.closeHandler} openHandler={props.openHandler} editUser={props.editUser} index = {index+1} patientId={props.patientId} confirm={props.confirm}></AllotRow>))
+    console.log(ambTable);
+    return(
+        <div>
+            <div className="">
+                <div id="header" className="flex w-full h-12 px-5 items-center border-t-2 border-b-2 font-semibold text-gray-500 bg-[#f7f7f7]">
+                    <div className="w-[20%]">
+                        Select
+                    </div>
+                    <div className="w-[20%]">
+                        Sr. No.
+                    </div>
+                    <div className="w-[20%]">
+                        Status
+                    </div>
+                    <div className="w-[20%]">
+                        Plate
+                    </div>
+                    <div className="w-[20%]">
+                        Driver Name
+                    </div>
+                </div>
+                <div id="tablecontent">
+                    {ambTable.length>0? ambTable:(<div className="flex w-full h-12 px-5 items-center border-b-2 bg-white py-1 justify-center">
+                        {`No Free Ambulances available`}
+                    </div>)}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default AllotTable;

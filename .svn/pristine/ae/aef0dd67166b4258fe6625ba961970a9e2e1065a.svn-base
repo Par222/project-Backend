@@ -1,0 +1,40 @@
+import { AppointmentListContext } from "./AppointmentContext";
+import { useContext } from "react";
+import AppointmentRow from "./AppointmentRow";
+
+
+function AppointmentTable(){
+    const {appointmentList, updateAppointmentList} = useContext(AppointmentListContext)
+    const appTable = appointmentList?.map((doc, index) => (<AppointmentRow {...doc} key={appointmentList.id} index = {index+1}></AppointmentRow>))
+
+    return(
+        <div>
+            <div className="">
+                <div id="header" className="flex w-full h-12 px-5 items-center border-t-2 border-b-2 font-semibold text-gray-500 ">
+                    <div className="w-[10%]">
+                        Sr. No.
+                    </div>
+                    <div className="w-[20%]">
+                        Doctor Name
+                    </div>
+                    <div className="w-[20%]">
+                        Patient Name
+                    </div>
+                    <div className="w-[15%]">
+                        Date
+                    </div>
+                    <div className="w-[20%]">
+                        Time
+                    </div>
+                    <div className="w-[15%]">
+                        Prescription
+                    </div>
+                </div>
+                <div id="tablecontent">
+                    {appTable.length>0 && appTable}
+                </div>
+            </div>
+        </div>
+    );
+}
+export default AppointmentTable;

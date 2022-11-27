@@ -1,0 +1,42 @@
+import DoctorRow from "./DoctorRow";
+
+function DoctorTable(props){
+    const docTable = props?.doctors.map((doc, index) => (<DoctorRow {...doc} key={props.doctors.id} deleteUser={props.deleteUser} showModal={props.showModal} closeHandler={props.closeHandler} openHandler={props.openHandler} editUser={props.editUser} index = {index+1}></DoctorRow>))
+    return(
+        <div className="">
+            <div id="header" className="flex w-full h-12 px-5 items-center border-t-2 border-b-2 font-semibold text-gray-500 ">
+                <div className="w-[5%] mr-[2%]">
+                    Sr. No.
+                </div>
+                <div className="w-[15%]">
+                    Name
+                </div>
+                <div className="w-[10%]">
+                    Age
+                </div>
+                <div className="w-[15%]">
+                    Specialization
+                </div>
+                <div className="w-[8%]">
+                    Fees
+                </div>
+                <div className="w-[15%] flex">
+                    Description
+                </div>
+                <div className="w-[20%] flex">
+                    Appointments Scheduled
+                </div>
+                <div className="w-[5%]">
+                    Edit
+                </div>
+                <div className="w-[5%]">
+                    Delete
+                </div>
+            </div>
+            <div id="tablecontent">
+                {docTable.length>0 && docTable}
+            </div>
+        </div>
+    );
+}
+export default DoctorTable;

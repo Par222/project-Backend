@@ -1,0 +1,53 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faXmark} from "@fortawesome/free-solid-svg-icons"
+import { PatientListContext } from '../patient/PatientContext';
+import { useContext } from 'react';
+import axios from 'axios';
+import {toast} from "react-toastify"
+function AmbulanceRow(props){
+    const {patientList, updatePatientList} = useContext(PatientListContext)
+    const pat = patientList?.filter((obj => obj._id===props?.patient))
+    console.log(patientList);
+    console.log(props);
+    const openHandler=async()=>{
+        axios.patch(`http://localhost:5000/api/ambulance/${props.id}`,{
+            status:"Free"
+        }).then(()=>{
+            toast.success("Ambulance is free")
+           
+
+        })
+
+
+    }
+    const location = props.location.lat+", "+props.location.lng
+    return(
+        <div className="flex w-full h-12 px-5 items-center border-b-2 bg-white py-1">
+            <div className="w-[7%]">
+                {props.index}
+            </div>
+            <div className="w-[8%]">
+                {props.status}
+            </div>
+            <div className="w-[10%]">
+                {props.plate}
+            </div>
+            <div className="w-[15%]">
+                {props.driver.name}
+            </div>
+            <div className="w-[15%]">
+                {props.status === 'Free'? "-" : pat[0]?.name}
+            </div>
+            <div className="w-[20%]">
+                {props.status === 'Free'? "-" : location}
+            </div>
+            <div className="w-[20%]">
+                {props.status === "Free"?'-': props.emergency.details}
+            </div>
+            <div className="w-[5%]">
+                {props.status === "Alloted"?<FontAwesomeIcon icon = {faXmark} className="text-lg" onClick={openHandler}/>:'-'}
+            </div>
+        </div>
+    )
+}
+export default AmbulanceRow

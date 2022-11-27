@@ -1,0 +1,29 @@
+import { useContext } from "react";
+import { AppointmentListContext } from "../../components/appointment/AppointmentContext";
+import AppointmentTable from "../../components/appointment/AppointmentTable";
+import Sidebar from "../../components/common/Sidebar";
+const Index = (props) => {
+
+    const {appointmentList, updateAppointmentList} = useContext(AppointmentListContext)
+    console.log(appointmentList);
+
+    return(
+        <div className="flex w-full">
+            <Sidebar></Sidebar>
+            <div className="flex flex-col w-[100%]">
+                <div className="w-full bg-white px-10 py-7 font-bold text-3xl">Appointment Details</div>
+                <div className="flex flex-col bg-[#f7f7f7] min-h-screen px-10 py-5" id="content">
+                    <div className="rounded-md border-2 shadow-md">
+                        <div id="title" className="flex text-3xl py-8 px-5 bg-white">
+                                <div className="font-semibold">
+                                    List of Appointments:
+                                </div>
+                        </div>
+                        <AppointmentTable></AppointmentTable>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+export default Index;

@@ -1,0 +1,77 @@
+import { useRef, useState } from "react";
+
+function UserForm(props){
+    const idRef = useRef()
+    const nameRef = useRef()
+    const ageRef = useRef()
+    const specRef = useRef()
+    const feeRef = useRef()
+    const descRef = useRef()
+    const [name, setName] = useState(props.name)
+    const [id, setId] = useState(props.id)
+    const [age, setAge] = useState(props.age)
+    const [expertise, setCat] = useState(props.expertise)
+    const [fees, setFees] = useState(props.fees)
+    const [desc, setDesc] = useState(props.desc)
+
+    function submitHandler(e){
+        e.preventDefault();
+        const nameValue = nameRef.current.value;
+        const ageValue = ageRef.current.value;
+        const specValue = specRef.current.value;
+        const feeValue = feeRef.current.value;
+        const descValue = descRef.current.value;
+        const input = {
+                _id: id,
+                name: nameValue,
+                expertise: specValue,
+                age: parseInt(ageValue),
+                fees: parseInt(feeValue),
+                des: descValue,
+                appointmentsSet: 0
+            }
+        if(props.isAdd){
+            props.addUser(input)
+        }
+        else{
+            props.editUser(input)
+            props.closeHandler()
+        }
+    }
+
+    return(
+        <div className="flex justify-center">
+            <form action="" className="flex flex-col w-[75%]" onSubmit={submitHandler}>
+                <div className="flex flex-row w-full justify-between">
+                    <div className="py-3 flex justify-between flex-col w-[45%]">
+                        <label htmlFor="name" className="pb-2 w-[40%] flex text-gray-500">Name:</label>
+                        <input type="text" name="name" id=""  required value={name} className="pl-5 border-2 bg-gray-100 border-gray-400 py-2 rounded-md w-full" ref={nameRef} onChange={(e) => setName(e.target.value)}/>
+                    </div>
+                    <div className="py-3 flex justify-between flex-col w-[45%]">
+                        <label htmlFor="age" className="pb-2 w-[40%] flex text-gray-500">Age:</label>
+                        <input type="number" name="age" id=""  required value={age} className="pl-5 border-2 bg-gray-100 border-gray-400 py-2 rounded-md w-full" ref={ageRef} onChange={(e) => setAge(e.target.value)}/>
+                    </div>
+                </div>
+                <div className="flex flex-row w-full justify-between">
+                    <div className="py-3 flex justify-between flex-col w-[45%]">
+                        <label htmlFor="specialization" className="pb-2 w-[40%] flex text-gray-500">Specialization:</label>
+                        <input type="text" name="specialization" id=""  required value={expertise} className="pl-5 border-2 bg-gray-100 border-gray-400 py-2 rounded-md" ref={specRef} onChange={(e) => setCat(e.target.value)}/>
+                    </div>
+                    <div className="py-3 flex justify-between flex-col w-[45%]">
+                        <label htmlFor="fees" className="pb-2 w-[40%] flex text-gray-500">Fees:</label>
+                        <input type="number" name="fees" id=""  required value={fees} className="pl-5 border-2 bg-gray-100 border-gray-400 py-2 rounded-md" ref={feeRef} onChange={(e) => setFees(e.target.value)}/>
+                    </div>
+                </div>
+                <div className="flex flex-col py-5">
+                    <label htmlFor="desc" className="pb-2 w-[40%] flex text-gray-500">Description:</label>
+                    <textarea type="text" name="desc" id=""  required value={desc} className="pl-5 border-2 bg-gray-100 border-gray-400 py-2 rounded-md w-full" ref={descRef} onChange={(e) => setDesc(e.target.value)}/>
+                </div>
+                <div className="flex ml-auto my-3">
+                    <button type="submit" className="bg-blue-500 rounded-3xl px-7 py-2 mr-3 text-white font-semibold hover:bg-blue-600">Submit</button>
+                    <button className="bg-gray-400 rounded-3xl px-7 py-2 ml-3 text-white font-semibold hover:bg-gray-600" onClick={props.closeHandler}>Cancel</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+export default UserForm;

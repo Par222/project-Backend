@@ -1,0 +1,15 @@
+import Sidebar from "../../components/common/Sidebar";
+const Index = (props) => {
+    return(
+        <div className="flex w-full">
+            <Sidebar></Sidebar>
+            <div className="flex flex-col w-[100%]">
+                <div className="w-full bg-white px-10 py-7 font-bold text-3xl">Ward Details</div>
+                <div className="flex flex-col bg-[#f7f7f7] min-h-screen" id="content">
+
+                </div>
+            </div>
+        </div>
+    );
+}
+export default Index;

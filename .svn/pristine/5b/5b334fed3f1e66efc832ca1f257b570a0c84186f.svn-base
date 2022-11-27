@@ -1,0 +1,84 @@
+import { AmbulanceListContext } from "../../components/ambulance/AmbulanceContext";
+import React, { useContext, useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPlusCircle, faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons"
+import Sidebar from "../../components/common/Sidebar";
+import AmbulanceTable from "../../components/ambulance/AmbulanceTable";
+import RequestsTable from "../../components/ambulance/RequestsTable";
+import EditModal from "../../components/common/EditModal";
+
+const Index = (props) => {
+    const {ambulanceList, updateAmbulanceList} = useContext(AmbulanceListContext)
+    const [showModal,setShowModal]=useState(false)
+    const [showDropdown,setDropdown]=useState(false)
+    const [filter, setFilter] = useState('')
+    const closeHandler=()=>{
+        setShowModal(false)
+    }
+    const openHandler=()=>{
+        setShowModal(true)
+    }
+    return(
+        <div className="flex w-full">
+            {
+                showModal && <EditModal 
+                title="Add new ambulance"
+                isStepModal={false}
+                closeHandler={closeHandler}>
+                <UserForm addUser={addUser} isAdd={true}></UserForm>
+                </EditModal>
+            }
+            <Sidebar></Sidebar>
+            <div className="flex flex-col w-[100%]">
+                <div className="w-full bg-white px-10 py-7 font-bold text-3xl flex items-center">Ambulance Details</div>
+                <div className="flex flex-col bg-[#f7f7f7]  px-10 py-5" id="content">
+                    <div className="rounded-md border-2 shadow-md">
+                        <div id="title" className="flex  py-8 px-5 bg-white">
+                                <div className="font-semibold w-[24%] text-3xl">
+                                    List of Ambulances:
+                                </div>
+                                <div className="flex justify-between w-[76%]">
+                                    <div className="text-3xl">
+                                        <FontAwesomeIcon icon = {faPlusCircle} className="px-3" onClick={openHandler}/>
+                                    </div>
+                                    <div className="flex flex-col absolute left-[85%]">
+                                        <div className={`rounded-md text-black border-blue-400 border-2 px-2 py-2 text-lg hover:bg-blue-400 hover:text-white transition-all duration-200 font-semibold cursor-pointer flex items-center ${showDropdown? "bg-blue-400 text-white rounded-b-none":""}`} onClick={() => setDropdown(!showDropdown)}>
+                                            Filter by Status {!showDropdown?<FontAwesomeIcon icon = {faAngleDown} className='pl-2'/>:<FontAwesomeIcon icon = {faAngleUp} className='pl-2'/>}
+                                        </div>
+                                        {showDropdown ? (
+                                            <ul className="border-blue-400 border-2 rounded-b-md bg-white">
+                                                <li className='border-b-2 mx-2 py-1 cursor-pointer' onClick={() => {setFilter('Free')
+                                            setDropdown(false)}}>
+                                                    Free
+                                                </li>
+                                                <li className='border-b-2 mx-2 py-1 cursor-pointer' onClick={() => {setFilter('Alloted')
+                                            setDropdown(false)}}>
+                                                    Alloted
+                                                </li>
+                                                <li className='border-b-2 mx-2 py-1 cursor-pointer' onClick={() => {setFilter('')
+                                            setDropdown(false)}}>
+                                                    None
+                                                </li>
+                                            </ul>
+                                        ): console.log("not dropdown")}
+                                    </div>
+                                </div>
+                        </div>
+                        <AmbulanceTable filter = {filter}></AmbulanceTable>
+                    </div>
+                </div>
+                <div className="flex flex-col bg-[#f7f7f7] min-h-screen px-10 py-5" id="content">
+                    <div className="rounded-md border-2 shadow-md">
+                        <div id="title" className="flex  py-8 px-5 bg-white">
+                                <div className="font-semibold w-[24%] text-3xl">
+                                    Patient Requests:
+                                </div>
+                        </div>
+                        <RequestsTable></RequestsTable>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+export default Index;

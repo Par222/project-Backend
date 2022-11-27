@@ -1,0 +1,56 @@
+import { useContext, useState } from "react";
+import { RequestsListContext } from "./RequestsContext";
+import RequestsRow from "./RequestsRow";
+import EditModal from "../common/EditModal";
+import AllotTable from "./AllotTable";
+
+function RequestsTable(props){
+    const {requestsList, updateReq} = useContext(RequestsListContext)
+    const [amb,setAmb]=useState("")
+    console.log(requestsList)
+    const [showModal,setShowModal]=useState(false)
+    const openHandler=(req)=>{
+        setShowModal(true)
+        setAmb(req)
+        console.log(req,'req')
+    }
+    const closeHandler=()=>{
+        setShowModal(false)
+    }
+    
+    const reqTable = requestsList?.map((doc, index) => (<RequestsRow {...doc} key={doc._id} index = {index+1}  openHandler={openHandler}></RequestsRow>))
+    console.log(reqTable);
+    
+    return(
+        <>
+        <div>
+            <div className="">
+                <div id="header" className="flex w-full h-12 px-5 items-center border-t-2 border-b-2 font-semibold text-gray-500 ">
+                    <div className="w-[10%]">
+                        Sr. No.
+                    </div>
+                    <div className="w-[20%]">
+                        Patient Name
+                    </div>
+                    <div className="w-[20%]">
+                        Location
+                    </div>
+                    <div className="w-[20%]">
+                        Emergency
+                    </div>
+                    <div className="w-[30%] flex justify-center">
+                        Allot
+                    </div>
+                </div>
+                <div id="tablecontent">
+                    {reqTable.length>0 && reqTable}
+                </div>
+            </div>
+           
+        </div>
+        {showModal && <EditModal title="Allotment" negHandler={closeHandler} closeHandler={closeHandler}><AllotTable  {...amb} closeHandler={closeHandler}></AllotTable></EditModal>}
+        </>
+    )
+}
+
+export default RequestsTable;

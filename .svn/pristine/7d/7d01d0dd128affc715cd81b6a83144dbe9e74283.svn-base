@@ -1,0 +1,28 @@
+import React, { useEffect, useState } from 'react';
+
+export const DoctorListContext = React.createContext();
+
+function DoctorContext({children}){
+    const [doctorsList, updateDoctorsList] = useState()
+
+    useEffect(() => {
+        const getDoctors = async () => {
+            try{
+                const response = await fetch('http://localhost:5000/api/doctors')
+                const responseData = await response.json()
+                updateDoctorsList(responseData.doctors)
+            } catch(err){
+             console.log(err.message);
+            }
+        }
+        getDoctors()
+    },[])
+
+    return(
+        <DoctorListContext.Provider value = {{doctorsList, updateDoctorsList}}>
+            {children}
+        </DoctorListContext.Provider>
+    );
+}
+
+export {DoctorContext};

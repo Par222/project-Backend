@@ -61,7 +61,7 @@ const fetchServiceInfo = async (req,res,next) => {
       paraTitle.push($(paras).text());
     }
 
-    console.log(paraArray);
+    // console.log(paraArray);
 
     res.json({"headTitle":headerTitle, "images":imageList, "paraTitle":paraTitle})
   })

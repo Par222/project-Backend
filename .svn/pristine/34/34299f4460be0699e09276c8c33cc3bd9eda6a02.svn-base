@@ -1,0 +1,48 @@
+import { AmbulanceListContext } from "./AmbulanceContext";
+import { useContext } from "react";
+import AmbulanceRow from "./AmbulanceRow";
+
+function AmbulanceTable(props){
+    const {ambulanceList, updateAmbulanceList} = useContext(AmbulanceListContext)
+    const ambTable = props.filter === ''?ambulanceList?.map((doc, index) => (<AmbulanceRow {...doc} key={ambulanceList.id} deleteUser={props.deleteUser} showModal={props.showModal} closeHandler={props.closeHandler} openHandler={props.openHandler} editUser={props.editUser} index = {index+1}></AmbulanceRow>)):ambulanceList?.filter((obj => obj.status === props.filter)).map((doc, index) => (<AmbulanceRow {...doc} key={ambulanceList.id} deleteUser={props.deleteUser} showModal={props.showModal} closeHandler={props.closeHandler} openHandler={props.openHandler} editUser={props.editUser} index = {index+1}></AmbulanceRow>))
+    console.log(ambTable);
+    return(
+        <div>
+            <div className="">  
+                <div id="header" className="flex w-full h-12 px-5 items-center border-t-2 border-b-2 font-semibold text-gray-500 ">
+                    <div className="w-[7%]">
+                        Sr. No.
+                    </div>
+                    <div className="w-[8%]">
+                        Status
+                    </div>
+                    <div className="w-[10%]">
+                        Plate
+                    </div>
+                    <div className="w-[15%]">
+                        Driver Name
+                    </div>
+                    <div className="w-[15%]">
+                        Patient Name
+                    </div>
+                    <div className="w-[20%]">
+                        Location
+                    </div>
+                    <div className="w-[20%]">
+                        Emergency
+                    </div>
+                    <div className="w-[5%]">
+                        Unallot
+                    </div>
+                </div>
+                <div id="tablecontent">
+                    {ambTable.length>0? ambTable:(<div className="flex w-full h-12 px-5 items-center border-b-2 bg-white py-1 justify-center">
+                        {`No ${props.filter===''?'':props.filter} Ambulances available`}
+                    </div>)}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default AmbulanceTable;

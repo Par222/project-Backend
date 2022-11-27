@@ -1,0 +1,25 @@
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+
+
+export const PatientListContext = React.createContext();
+
+function PatientContext({children}){
+    const [patientList, updatePatientList] = useState([])
+    useEffect(() => {
+        const getPatient = async () => {
+            let response = await axios.get("http://localhost:5000/api/patient")
+            console.log(response.data); 
+            updatePatientList(response.data.user)
+        }
+        getPatient()
+    }, [])
+
+    return(
+        <PatientListContext.Provider value = {{patientList, updatePatientList}}>
+            {children}
+        </PatientListContext.Provider>
+    )
+}
+
+export {PatientContext}

@@ -1,0 +1,40 @@
+import '../styles/globals.css'
+import React from 'react';
+import { DoctorContext } from '../components/doctor/DoctorContext';
+import { AppointmentContext } from '../components/appointment/AppointmentContext';
+import { AmbulanceContext } from '../components/ambulance/AmbulanceContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { PatientContext } from '../components/patient/PatientContext';
+import { RequestsContext } from '../components/ambulance/RequestsContext';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <div>
+      <RequestsContext>
+        <PatientContext>
+          <AmbulanceContext>
+            <AppointmentContext>
+              <DoctorContext>
+                <Component {...pageProps} />
+                <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                />
+              </DoctorContext>
+            </AppointmentContext>
+          </AmbulanceContext>
+        </PatientContext>
+      </RequestsContext>
+    </div>
+  )
+}
+
+export default MyApp

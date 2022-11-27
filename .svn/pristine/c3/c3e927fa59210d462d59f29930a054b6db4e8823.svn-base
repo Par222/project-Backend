@@ -1,0 +1,130 @@
+import Sidebar from "../../components/common/Sidebar";
+import React, { useContext, useEffect, useState } from "react";
+import DoctorTable from "../../components/doctor/DoctorTable";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPlusCircle} from "@fortawesome/free-solid-svg-icons"
+import EditModal from "../../components/common/EditModal";
+import UserForm from "../../components/doctor/UserForm";
+import { toast } from "react-toastify";
+import { DoctorListContext } from "../../components/doctor/DoctorContext";
+
+const Index = (props) => {
+    const [showModal,setShowModal]=useState(false)
+    const closeHandler=()=>{
+        setShowModal(false)
+    }
+    const openHandler=()=>{
+        setShowModal(true)
+    }
+    // const [doctorsList, updateDoctorsList] = useState()
+
+    // useEffect(() => {
+    //     const getDoctors = async () => {
+    //         try{
+    //             const response = await fetch('http://localhost:5000/api/doctors')
+    //             const responseData = await response.json()
+    //             updateDoctorsList(responseData.doctors)
+    //             if(!response.ok){
+
+    //             }
+    //         } catch(err){
+    //             toast.error(err.message);
+    //         }
+    //     }
+    //     getDoctors()
+    // },[])
+    
+    const {doctorsList, updateDoctorsList} = useContext(DoctorListContext)
+
+    async function addUser(input){
+        console.log(input)
+        try{
+            const response = await fetch('http://localhost:5000/api/doctors/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: input.name,
+                    des: input.name,
+                    age: input.age,
+                    expertise: input.expertise,
+                    image: 'image1',
+                    fees: input.fees
+                })
+            });
+            const responseData = await response.json()
+            console.log(responseData);
+            updateDoctorsList((e) => [...e, responseData.doctor])
+            closeHandler()
+            toast.success('Doctor Added Successfully');
+        } catch(err){
+            console.log(err.message)
+        }
+
+    }
+
+    async function deleteUser(id, name){
+        updateDoctorsList((e) => e.filter((doc) => doc.id !== id))
+        const response = await fetch(`http://localhost:5000/api/doctors/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        toast.success(`${name} Removed Successfully`);
+    }
+
+    async function editUser(input){
+        const response = await fetch(`http://localhost:5000/api/doctors/${input._id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(input)
+        })
+        console.log(input)
+        const index = doctorsList.indexOf(doctorsList.filter((obj => obj._id === input._id))[0])
+        let arr = [...doctorsList]
+        console.log(arr)
+        console.log(index)
+        arr[index].name = input.name
+        arr[index].age = input.age
+        arr[index].fees = input.fees
+        arr[index].expertise = input.expertise        
+        arr[index].des = input.des        
+        updateDoctorsList(arr)
+        toast.success(`${input.name} Edited Successfully`);
+    }
+
+    return(
+        <div className="flex w-full">
+            {
+                showModal && <EditModal 
+                title="Add new doctor"
+                isStepModal={false}
+                closeHandler={closeHandler}>
+                <UserForm addUser={addUser} isAdd={true}></UserForm>
+                </EditModal>
+            }
+            <Sidebar></Sidebar>
+            <div className="flex flex-col w-[100%]">
+                <div className="w-full bg-white px-10 py-7 font-bold text-3xl">Doctor Details</div>
+                <div className="flex flex-col bg-[#f7f7f7] min-h-screen px-10 py-5" id="content">
+                    <div className="rounded-md border-2 shadow-md">
+                        <div id="title" className="flex text-3xl py-8 px-5 bg-white">
+                                <div className="font-semibold">
+                                    List of Doctors:
+                                </div>
+                                <div>
+                                    <FontAwesomeIcon icon = {faPlusCircle} className="px-5" onClick={openHandler}/>
+                                </div>
+                        </div>
+                        {doctorsList && <DoctorTable doctors={doctorsList} deleteUser={deleteUser} showModal={showModal} closeHandler={closeHandler} openHandler={openHandler} editUser={editUser}></DoctorTable>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+export default Index;

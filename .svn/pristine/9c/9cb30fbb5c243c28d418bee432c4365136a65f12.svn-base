@@ -1,0 +1,55 @@
+import { useContext, useState } from "react";
+import axios from "axios";
+import {toast,ToastContainer} from "react-toastify"
+import { AmbulanceListContext } from "./AmbulanceContext";
+function AllotRow(props) {
+  const [isSelected, setSelected] = useState(false);
+  console.log("amb", props);
+  const ctx=useContext(AmbulanceListContext)
+  const selectHandler = () => {
+    setSelected(!isSelected);
+    try {
+      axios.patch(`http://localhost:5000/api/ambulance/${props.amb.id}`, {
+          status: "Alloted",
+          location: {
+            lat: props.ambulance.location.lat,
+            lng: props.ambulance.location.lng,
+          },
+          emergency: {
+            details: props.ambulance.emergency.details,
+            contact: props.ambulance.emergency.contact,
+          },
+          patient: props.patient,
+          request: props.id,
+        })
+        .then(() => {
+          axios.patch(`http://localhost:5000/api/request/${props.id}`, {
+              status: "Approved",
+            })
+            .then(() => {
+              props.closeHandler()
+              
+              toast.success("Approved Successful !", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+              });
+            });
+        });
+    } catch (err) {}
+  };
+  console.log(props.amb);
+  return (
+    <div className="flex w-full h-12 px-5 items-center border-b-2 bg-white py-1">
+      <div
+        className="flex justify-center w-[11%] text-black bg-violet-400 mr-[9%] px-[1%] rounded-sm cursor-pointer hover:text-white hover:bg-violet-500 transition-all duration-200"
+        onClick={selectHandler}
+      >
+        {isSelected ? "Selected" : "Select"}
+      </div>
+      <div className="w-[20%]">{props.index}</div>
+      <div className="w-[20%]">{props.amb.status}</div>
+      <div className="w-[20%]">{props.amb.plate}</div>
+      <div className="w-[20%]">{props.amb.driver.name}</div>
+    </div>
+  );
+}
+export default AllotRow;

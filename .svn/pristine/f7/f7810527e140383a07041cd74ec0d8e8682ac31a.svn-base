@@ -1,0 +1,26 @@
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+
+
+export const AmbulanceListContext = React.createContext();
+
+function AmbulanceContext({children}){
+    const [ambulanceList, updateAmbulanceList] = useState([])
+    const getAmbulance = async () => {
+        let response = await axios.get("http://localhost:5000/api/ambulance")
+        console.log(response.data); 
+        updateAmbulanceList(response.data.ambulances)
+    }
+    useEffect(() => {
+       
+        getAmbulance()
+    }, [])
+
+    return(
+        <AmbulanceListContext.Provider value = {{ambulanceList, updateAmbulanceList,getAmbulance}}>
+            {children}
+        </AmbulanceListContext.Provider>
+    )
+}
+
+export {AmbulanceContext}

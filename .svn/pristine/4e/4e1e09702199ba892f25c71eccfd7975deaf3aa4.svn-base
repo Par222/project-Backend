@@ -1,0 +1,49 @@
+import React, {useState, useEffect} from 'react';
+
+export const AppointmentListContext = React.createContext();
+
+function AppointmentContext({children}){
+    const [appointmentList, updateAppointmentList] = useState([])
+    
+    useEffect(() => {
+        updateAppointmentList([
+            {
+                "id": 1,
+                "doctor":"DR. Bruno Rodrigeous",
+                "patient": "Kartik Menon",
+                "date": "27-11-2022",
+                "slot": "11:00-12:00"
+            },
+            {
+                "id": 2,
+                "doctor":"DR. Bruno Rodrigeous",
+                "patient": "Paras Mehta",
+                "date": "20-11-2022",
+                "slot": "11:00-12:00"
+            },
+            {
+                "id": 3,
+                "doctor":"DR. Ramika Sen",
+                "patient": "Paras Mehta",
+                "date": "27-11-2022",
+                "slot": "13:00-14:00"
+            },
+            {
+                "id": 4,
+                "doctor":"DR. Anna Brian",
+                "patient": "Kartik Menon",
+                "date": "15-11-2022",
+                "slot": "09:00-10:00"
+            }
+        ])
+    },[])
+
+    
+    // add GET request
+    return(
+        <AppointmentListContext.Provider value = {{appointmentList, updateAppointmentList}}>
+            {children}
+        </AppointmentListContext.Provider>
+    )
+}
+export {AppointmentContext};
