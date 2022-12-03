@@ -33,6 +33,8 @@ router.get("/patient-upcoming-appointment-list/:patientID", appointmentControlle
 
 router.get("/patient-appointment-list/:patientID", appointmentController.fetchAppointmentsByPatient);
 
+router.patch("/", appointmentController.setAllStatusToPending);
+
 router.get("/", appointmentController.fetchAllAppointments);
 
 module.exports = router;

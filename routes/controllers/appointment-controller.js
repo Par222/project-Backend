@@ -6,7 +6,6 @@ const { findById } = require("../../modals/ambulance");
 const testController = require("../../services/utils");
 
 const fetchPatientById = async (patientID) => {
-  console.log("patient", patientID);
   let user;
   try {
     user = await User.findById(patientID);
@@ -75,6 +74,9 @@ const fetchAppointmentByID = async (req, res, next) => {
 const updateAppointment = async (req, res, next) => {
   const appointmentID = req.params.appointmentID;
   const newAppointment = req.body.appointment;
+  delete newAppointment.id;
+  delete newAppointment._id;
+
   let updatedAppointment;
   try {
     updatedAppointment = await Appointment.findByIdAndUpdate(
@@ -187,11 +189,13 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
   const currentDate = new Date();
   let appointments;
   try {
-    appointments = await Appointment.find(
-      { doctor: doctorID },
-      { slot: { date: { gte: currentDate } } }
-    );
+    appointments = await Appointment.find({
+      doctor: doctorID,
+      "slot.date": { $gte: currentDate } ,
+    });
+    console.log("hey", appointments);
   } catch (error) {
+    console.log(error)
     throw new HttpError("Error fetching appointments!", 422);
   }
   if (!appointments) {
@@ -217,7 +221,6 @@ const fetchUpcomingAppointmentsByDoctor = async (req, res, next) => {
 
 const fetchAppointmentsByDoctor = async (req, res, next) => {
   const doctorID = req.params.doctorID;
-  console.log(doctorID);
   let appointments;
   try {
     appointments = await Appointment.find({
@@ -229,7 +232,6 @@ const fetchAppointmentsByDoctor = async (req, res, next) => {
   if (!appointments) {
     throw new HttpError("No appointments found!", 500);
   }
-  console.log(appointments);
   // const dataToBeReturned = appointments.map(async (appointment) => {
   //   const patientData = await fetchPatientById(appointment?.patient);
   //   console.log("pd", patientData)
@@ -314,6 +316,15 @@ const fetchUpcomingAppointmentsByPatient = async (req, res, next) => {
     });
 };
 
+const setAllStatusToPending = async (req, res, next) => {
+  try {
+    await Appointment.updateMany({}, { status: "Pending" });
+    res.send("Done");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports.createAppointment = createAppointment;
 module.exports.fetchAllAppointments = fetchAllAppointments;
 module.exports.fetchAppointmentByID = fetchAppointmentByID;
@@ -325,3 +336,4 @@ module.exports.fetchAppointmentsByDoctor = fetchAppointmentsByDoctor;
 module.exports.fetchAppointmentsByPatient = fetchAppointmentsByPatient;
 module.exports.fetchUpcomingAppointmentsByPatient =
   fetchUpcomingAppointmentsByPatient;
+module.exports.setAllStatusToPending = setAllStatusToPending;
