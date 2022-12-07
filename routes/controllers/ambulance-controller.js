@@ -4,6 +4,7 @@ const { validationResult } = require("express-validator");
 const Ambulance = require("../../modals/Ambulance");
 const User = require("../../modals/user");
 const { default: mongoose } = require("mongoose");
+const axios=require("axios")
 class Ambulances{
  getAllAmbulance = async (req, res, next) => {
  
@@ -34,7 +35,8 @@ createAmbulance = async (req, res, next) => {
       plate,
       driver,
       location:{},
-      emergency:{}
+      emergency:{},
+      address:""
 
     });
     let amb;
@@ -53,13 +55,52 @@ createAmbulance = async (req, res, next) => {
    updateAmbulanceById = async (req, res, next) => {
     const ambId = req.params.pid;
     const error = validationResult(req);
+    let {location}=req.body
+    
+    let loc=""  
+    let latitude=parseFloat(location?.lat)
+    let long=parseFloat(location?.lng)
+    if(location?.lat){
+
+    const result= await axios.get(
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${long}&apiKey=737ada17b7d84106b103048258edb583`,
+          {
+            headers: {
+              'Accept-Encoding': 'application/json',
+          }
+          }
+        )
+       
+        const json = JSON.stringify(result.data)
+        const locs=JSON.parse(json)
+        loc=locs?.features[0].properties.formatted
+
+
+    }
+   
+
+    console.log(loc)
     if (!error.isEmpty()) {
       throw new HttpError("Invalid details provided", 501);
     }
+    
+    
   
     let ambulance;
     try {
+      if(loc!="")
+      {
+       
+        let locationBody={...req.body,address:loc}
+
+      ambulance = await Ambulance.findByIdAndUpdate(ambId,locationBody,{new:true});
+      }
+      else
+      {
+     
       ambulance = await Ambulance.findByIdAndUpdate(ambId, req.body,{new:true});
+      }
+
     } catch {
       return next(new HttpError("Could not connect to database", 422));
     }
@@ -102,6 +143,7 @@ createAmbulance = async (req, res, next) => {
     res.json({ ambulance: amb.toObject({ getters: true }) });
   };
 }
+
   module.exports=Ambulances
 
 

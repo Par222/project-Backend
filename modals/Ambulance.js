@@ -23,7 +23,8 @@ const ambulanceSchema = new Schema({
       ref: "Request",
     },
     
-  location: { type: { lat: String, lng: String }, required: false },
+  location: { type: { lat: String, lng: String}, required: false },
+  address:{type:String ,required:false},
   emergency:{type:{details:String,contact:String},required:false},
    
  
